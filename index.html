@@ -38,6 +38,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .cd.sel .ck:after{content:'✓';position:absolute;left:5px;top:0;font-size:14px;color:#fff;font-weight:700}
 .pfb{position:absolute;right:8px;top:8px;background:#000a;border-radius:10px;padding:1px 8px;font-size:11px;color:#cfe2ff}
 .pts{margin-top:10px}.pt{display:flex;gap:10px;align-items:flex-start;padding:9px 0 2px;border-top:1px solid #ffffff12}.pt b{font-size:14px}.pt.on b{color:#5aa2ff}.pt p{margin:3px 0 0;font-size:12px;line-height:1.45;color:var(--t2)}.ptr{flex:none}.ptr text{font-size:13px}.pth{display:flex;justify-content:space-between;font-size:12.5px;color:var(--t2);margin:12px 0 2px}.pth:first-of-type{margin-top:4px}.pth b{color:var(--t1,#f2f2f4);font-weight:600}
+#q::-webkit-search-cancel-button,#q::-webkit-search-decoration{-webkit-appearance:none;appearance:none}#q{-webkit-appearance:none;appearance:none}
 .mob{position:absolute;left:8px;bottom:8px;background:#0b6b3acc;border-radius:10px;padding:1px 8px;font-size:11px;color:#d9ffe8}
 .vd{position:absolute;right:8px;bottom:8px;background:#000a;border-radius:8px;padding:0 6px;font-size:11px}
 .sc{position:absolute;inset:0;background:#141416 no-repeat;display:none}.sc b{position:absolute;left:8px;top:8px;background:#000b;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:400}
@@ -215,7 +216,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=20;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=21;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -266,7 +267,7 @@ function liveHTML(){if(WEB&&B.need)return `<span class="live" data-a="conn"><i s
  const col=stale?'#777':(a&&a.color)||'#777';return `<span class="live" data-a="stat"><i style="background:${col}"></i>${stale?(age==null?'현황 없음':'PC 꺼짐 · '+ago(age)):esc((a&&a.label||'').replace('무인 작업 ',''))}${PEND.length?' · ⏳'+PEND.length:''}</span>`}
 const ago=m=>m<60?m+'분 전':m<1440?Math.round(m/60)+'시간 전':Math.round(m/1440)+'일 전';
 function topHTML(){if(V.selm)return `<div class="selh"><span class="ib" data-a="selx">✕</span><b>${V.sel.size}개 선택됨</b><span class="txtb" data-a="selall">전체</span><span class="txtb" data-a="selinv">반전</span></div>`;
- return `<div class="top"><span class="ib" data-a="menu">☰</span>${liveHTML()}<div class="srch">🔍 ${S.tags.map(t=>`<span class="chip" data-rt="${esc(t)}">${esc(t)} ✕</span>`).join('')}${S.not.map(t=>`<span class="chip no" data-rn="${esc(t)}">제외 ${esc(t)} ✕</span>`).join('')}<input id="q" placeholder="${searching()?'추가…':'태그·이름 검색'}" value="${esc(S.text)}"></div><span class="ib" data-a="selon">☑</span><span class="ib" data-a="sort">⇅</span></div>`}
+ return `<div class="top"><span class="ib" data-a="menu">☰</span>${liveHTML()}<div class="srch">🔍 ${S.tags.map(t=>`<span class="chip" data-rt="${esc(t)}">${esc(t)} ✕</span>`).join('')}${S.not.map(t=>`<span class="chip no" data-rn="${esc(t)}">제외 ${esc(t)} ✕</span>`).join('')}<input id="q" type="search" name="eg-search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-lpignore="true" placeholder="${searching()?'추가…':'태그·이름 검색'}" value="${esc(S.text)}"></div><span class="ib" data-a="selon">☑</span><span class="ib" data-a="sort">⇅</span></div>`}
 function headHTML(L){let h;if(searching()){h=`<div class="big"><h1>검색 결과</h1><p>${S.tags.length?'태그 '+S.tags.length+'개 '+(S.mode=='and'?'모두 포함':'하나라도')+' · ':''}${L.length.toLocaleString()}개</p></div><div class="tags"><span class="tg${S.mode=='and'?' on':''}" data-mode="and">모두 포함</span><span class="tg${S.mode=='or'?' on':''}" data-mode="or">하나라도</span><span class="tg" data-a="savesearch">＋ 검색 저장</span></div>`}
  else{const f=D.fby[S.folder],nm=S.folder=='all'?'전체':S.folder=='need'?'🤖 확인필요':S.folder=='recent'?'🕘 최근 본 클립':f?f.name:'전체',pp=f?path(f.id).slice(0,-1).join(' › '):'';
   h=`<div class="big"><h1>${esc(nm)}</h1><p>${pp?esc(pp)+' · ':''}${L.length.toLocaleString()}개</p></div>`}
