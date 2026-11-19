@@ -1,6 +1,6 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#000000"><title>Walk</title>
+<meta name="theme-color" content="#000000"><title>이글</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <style>
 html,body{height:100%;margin:0;background:#000;color:#f2f2f4;font:15px/1.5 'SamsungOne','One UI Sans','Noto Sans KR',system-ui,sans-serif}
@@ -11,7 +11,7 @@ input{width:100%;box-sizing:border-box;height:48px;border:0;outline:0;border-rad
 button{width:100%;height:50px;margin-top:10px;border:0;border-radius:18px;background:#3e91ff;color:#fff;font:inherit;font-weight:600}
 #err{color:#ff8f8f;min-height:22px;margin-top:8px}
 </style></head><body>
-<div id="box"><img src="icon-192.png" alt=""><h1>Walk 연결</h1>
+<div id="box"><img src="icon-192.png" alt=""><h1>이글 연결</h1>
 <p>처음 한 번만 Apps Script 웹 앱 주소를 붙여 넣습니다. 주소는 이 폰에만 저장됩니다.</p>
 <input id="u" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off">
 <button id="go">저장하고 열기</button><div id="err"></div></div>
@@ -23,7 +23,7 @@ button{width:100%;height:50px;margin-top:10px;border:0;border-radius:18px;backgr
  var standalone=matchMedia('(display-mode: standalone)').matches;
  if(ok(u)&&standalone){location.replace(u);return}
  var box=document.getElementById('box'),inp=document.getElementById('u'),err=document.getElementById('err');box.style.display='block';inp.value=u;
- if(ok(u)){document.querySelector('p').textContent='주소가 저장되어 있습니다. 크롬 메뉴(⋮)에서 "앱 설치"를 누르면 홈 화면에 Walk 아이콘이 생깁니다.';document.getElementById('go').textContent='지금 열기'}
+ if(ok(u)){document.querySelector('p').textContent='주소가 저장되어 있습니다. 크롬 메뉴(⋮)에서 "앱 설치"를 누르면 홈 화면에 이글 아이콘이 생깁니다.';document.getElementById('go').textContent='지금 열기'}
  document.getElementById('go').onclick=function(){var v=inp.value.trim();if(!ok(v)){err.textContent='script.google.com 으로 시작해 /exec 로 끝나는 주소를 넣어 주세요.';return}
   try{localStorage.setItem(K,v)}catch(e){}
   if(standalone)location.replace(v);else location.reload()}})();
