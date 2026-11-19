@@ -1,0 +1,30 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000"><title>Walk</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<style>
+html,body{height:100%;margin:0;background:#000;color:#f2f2f4;font:15px/1.5 'SamsungOne','One UI Sans','Noto Sans KR',system-ui,sans-serif}
+#box{display:none;max-width:420px;margin:0 auto;padding:18vh 22px 0}
+img{width:72px;height:72px;border-radius:20px;display:block;margin-bottom:18px}
+h1{font-size:24px;margin:0 0 6px}p{color:#9a9aa1;margin:0 0 18px}
+input{width:100%;box-sizing:border-box;height:48px;border:0;outline:0;border-radius:16px;background:#1f1f22;color:#f2f2f4;padding:0 14px;font:inherit}
+button{width:100%;height:50px;margin-top:10px;border:0;border-radius:18px;background:#3e91ff;color:#fff;font:inherit;font-weight:600}
+#err{color:#ff8f8f;min-height:22px;margin-top:8px}
+</style></head><body>
+<div id="box"><img src="icon-192.png" alt=""><h1>Walk 연결</h1>
+<p>처음 한 번만 Apps Script 웹 앱 주소를 붙여 넣습니다. 주소는 이 폰에만 저장됩니다.</p>
+<input id="u" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off">
+<button id="go">저장하고 열기</button><div id="err"></div></div>
+<script>
+// 하는 일: 저장된 Apps Script 주소로 바로 이동. 주소 뒤에 ?reset 을 붙여 열면 다시 입력.
+(function(){var K='walk_gas_url',ok=function(u){return /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec/.test(u)};
+ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+ var u='';try{if(/[?&]reset\b/.test(location.search))localStorage.removeItem(K);u=localStorage.getItem(K)||''}catch(e){}
+ var standalone=matchMedia('(display-mode: standalone)').matches;
+ if(ok(u)&&standalone){location.replace(u);return}
+ var box=document.getElementById('box'),inp=document.getElementById('u'),err=document.getElementById('err');box.style.display='block';inp.value=u;
+ if(ok(u)){document.querySelector('p').textContent='주소가 저장되어 있습니다. 크롬 메뉴(⋮)에서 "앱 설치"를 누르면 홈 화면에 Walk 아이콘이 생깁니다.';document.getElementById('go').textContent='지금 열기'}
+ document.getElementById('go').onclick=function(){var v=inp.value.trim();if(!ok(v)){err.textContent='script.google.com 으로 시작해 /exec 로 끝나는 주소를 넣어 주세요.';return}
+  try{localStorage.setItem(K,v)}catch(e){}
+  if(standalone)location.replace(v);else location.reload()}})();
+</script></body></html>
