@@ -162,7 +162,8 @@ const B={ids:{},tok:'',tokT:0,names:{},
  bm:new Map(),
  bitmap(kind,no){const k=kind+no;let p=this.bm.get(k);if(p){this.bm.delete(k);this.bm.set(k,p);return p}
   p=this.blob(kind,no).then(b=>createImageBitmap(b));this.bm.set(k,p);p.catch(()=>this.bm.delete(k));while(this.bm.size>5)this.bm.delete(this.bm.keys().next().value);return p},
- async preload(){if(this._pre)return;this._pre=1;try{const c=D.cfg.thumb,n=Math.ceil((Math.max(-1,...D.items.map(it=>it.thumb))+1)/c.per);let i=0;
+ async preload(){if(this._pre)return;this._pre=1;try{const si=D.cfg.scrubinfo;if(si){const need=[...new Set(V.list.slice(0,36).filter(x=>isV(x)&&x.scrub>=0).map(x=>Math.floor(x.scrub/si.per)))].slice(0,4);for(const n of need){try{await this.blob('scrub',n)}catch(e){}}}
+   const c=D.cfg.thumb,n=Math.ceil((Math.max(-1,...D.items.map(it=>it.thumb))+1)/c.per);let i=0;
    const run=async()=>{while(i<n){const k=i++;try{await this.blob('thumbs',k)}catch(e){}}};await Promise.all([run(),run(),run()])}catch(e){}},
  mc:new Map(),
  media(it){const hit=this.mc.get(it.id);if(hit){this.mc.delete(it.id);this.mc.set(it.id,hit);return hit}
@@ -347,9 +348,9 @@ function go(i){if(i<0||i>=V.list.length)return;V.cur=i;V.ab=null;V.pop='';const 
 function bindGrid(){const g=$('#grid');let t0=null,mode='',timer=0,pin=0,lastI=-1,scEl=null,pkT=0,pkEl=null;
  const posK=t=>{const r=t0.cd.querySelector('.th').getBoundingClientRect();return Math.max(0,Math.min(0.999,(t.clientX-r.left)/r.width))};
  const frame=(cd,k)=>{const it=V.list[+cd.dataset.i];if(!it||!isV(it)||it.scrub<0)return false;const c=D.cfg.scrubinfo,th=cd.querySelector('.th'),fr=Math.floor(k*c.n);
-  scEl=th.querySelector('.sc');scEl.style.display='block';scEl.style.backgroundSize=(c.n*100)+'% '+(c.per*100)+'%';scEl.style.backgroundPosition=(fr/(c.n-1)*100)+'% '+((it.scrub%c.per)/(c.per-1)*100)+'%';
+  scEl=th.querySelector('.sc');scEl.style.display='block';if(!scEl.style.backgroundImage)scEl.style.backgroundColor='transparent';scEl.style.backgroundSize=(c.n*100)+'% '+(c.per*100)+'%';scEl.style.backgroundPosition=(fr/(c.n-1)*100)+'% '+((it.scrub%c.per)/(c.per-1)*100)+'%';
   scEl.querySelector('b').textContent=it.fps?Math.round(k*it.dur*it.fps)+'f / '+Math.round(it.dur*it.fps)+'f':(k*it.dur).toFixed(1)+' / '+it.dur.toFixed(1)+'초';scEl.querySelector('u').style.width=(k*100)+'%';
-  const el=scEl;B.sheet('scrub',Math.floor(it.scrub/c.per)).then(u=>{el.style.backgroundImage='url('+u+')'}).catch(()=>{});return true};
+  const el=scEl;B.sheet('scrub',Math.floor(it.scrub/c.per)).then(u=>{el.style.backgroundImage='url('+u+')';el.style.backgroundColor=''}).catch(()=>{});return true};
  const peekStop=()=>{if(pkT){clearInterval(pkT);pkT=0}};
  const cardAt=(x,y)=>{const el=document.elementFromPoint(x,y);return el&&el.closest('.cd')};
  const mark=cd=>{if(!cd)return;const i=+cd.dataset.i;if(i==lastI)return;lastI=i;const id=V.list[i].id;if(V.dragOn)V.sel.add(id);else V.sel.delete(id);cd.classList.toggle('sel',V.dragOn);updSel()};
