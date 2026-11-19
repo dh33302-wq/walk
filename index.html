@@ -21,11 +21,11 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .live{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);background:var(--s1);border-radius:16px;padding:8px 12px;white-space:nowrap}
 .live i{width:8px;height:8px;border-radius:50%;background:#777}
 .srch{flex:1;display:flex;align-items:center;gap:6px;min-height:40px;border-radius:20px;background:var(--s1);padding:4px 12px;min-width:0;flex-wrap:wrap}
-.srch input{flex:1;min-width:80px;background:none;border:0;outline:0;height:30px}
+.srch input{flex:1;min-width:36px;width:0;background:none;border:0;outline:0;height:30px}
 .chip{background:#1d3a66;color:#cfe2ff;border-radius:14px;padding:3px 10px;font-size:13px;white-space:nowrap}.chip.no{background:#5a2328;color:#ffd0d0}
 .sug{position:absolute;left:60px;right:60px;top:52px;background:var(--s2);border-radius:16px;padding:6px;z-index:20;max-height:50vh;overflow:auto;box-shadow:0 10px 30px #000c}
 .sug div{padding:9px 12px;border-radius:10px;display:flex;justify-content:space-between}.sug div span{color:var(--t2)}
-.big{padding:8px 18px 0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.big h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.5px}.big p{margin:0;color:var(--t2);font-size:13px}
+.big{padding:6px 18px 8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.big h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.5px}.big p{margin:0;color:var(--t2);font-size:13px}
 .tags{display:flex;gap:6px;padding:6px 14px 8px;overflow-x:auto;white-space:nowrap;align-items:center;scrollbar-width:none}
 .tg{background:var(--s1);border-radius:14px;padding:5px 11px;font-size:13px;flex:none}.tg i{font-style:normal;color:var(--t2);margin-left:5px}.tg.on{background:var(--ac);color:#fff}.tg.on i{color:#e3eeff}
 .lbl{color:var(--t2);font-size:12px;flex:none}
@@ -252,10 +252,10 @@ function liveHTML(){if(WEB&&B.need)return `<span class="live" data-a="conn"><i s
 const ago=m=>m<60?m+'분 전':m<1440?Math.round(m/60)+'시간 전':Math.round(m/1440)+'일 전';
 function topHTML(){if(V.selm)return `<div class="selh"><span class="ib" data-a="selx">✕</span><b>${V.sel.size}개 선택됨</b><span class="txtb" data-a="selall">전체</span><span class="txtb" data-a="selinv">반전</span></div>`;
  return `<div class="top"><span class="ib" data-a="menu">☰</span>${liveHTML()}<div class="srch">🔍 ${S.tags.map(t=>`<span class="chip" data-rt="${esc(t)}">${esc(t)} ✕</span>`).join('')}${S.not.map(t=>`<span class="chip no" data-rn="${esc(t)}">제외 ${esc(t)} ✕</span>`).join('')}<input id="q" placeholder="${searching()?'추가…':'태그·이름 검색'}" value="${esc(S.text)}"></div><span class="ib" data-a="selon">☑</span><span class="ib" data-a="sort">⇅</span></div>`}
-function headHTML(L){let h;if(searching()){h=`<div class="big"><h1>검색 결과</h1><p>${S.tags.length?'태그 '+S.tags.length+'개 '+(S.mode=='and'?'모두 포함':'하나라도')+' · ':''}${L.length.toLocaleString()}개</p></div><div class="tags"><span class="tg${S.mode=='and'?' on':''}" data-mode="and">모두 포함</span><span class="tg${S.mode=='or'?' on':''}" data-mode="or">하나라도</span><span class="tg" data-a="savesearch">＋ 검색 저장</span><span class="lbl">결과</span>`}
+function headHTML(L){let h;if(searching()){h=`<div class="big"><h1>검색 결과</h1><p>${S.tags.length?'태그 '+S.tags.length+'개 '+(S.mode=='and'?'모두 포함':'하나라도')+' · ':''}${L.length.toLocaleString()}개</p></div><div class="tags"><span class="tg${S.mode=='and'?' on':''}" data-mode="and">모두 포함</span><span class="tg${S.mode=='or'?' on':''}" data-mode="or">하나라도</span><span class="tg" data-a="savesearch">＋ 검색 저장</span></div>`}
  else{const f=D.fby[S.folder],nm=S.folder=='all'?'전체':S.folder=='need'?'🤖 확인필요':S.folder=='recent'?'🕘 최근 본 클립':f?f.name:'전체',pp=f?path(f.id).slice(0,-1).join(' › '):'';
-  h=`<div class="big"><h1>${esc(nm)}</h1><p>${pp?esc(pp)+' · ':''}${L.length.toLocaleString()}개</p></div><div class="tags"><span class="lbl">태그</span>`}
- return h+tagCounts(L,14).filter(([t])=>!S.tags.includes(t)).map(([t,n])=>`<span class="tg" data-at="${esc(t)}">${esc(t)}<i>${n}</i></span>`).join('')+'</div>'}
+  h=`<div class="big"><h1>${esc(nm)}</h1><p>${pp?esc(pp)+' · ':''}${L.length.toLocaleString()}개</p></div>`}
+ return h}
 function cardHTML(it,i){const pf=it.folders.map(path).find(p=>p[0]&&p[0].startsWith('🎨'));const v=D.verify[it.id];
  return `<div class="cd${V.sel.has(it.id)?' sel':''}" data-i="${i}"><div class="th" ${thumbStyle(it)}><span class="ck"></span>${pf&&!V.selm?`<span class="pfb">${esc(emo(pf[pf.length-1])[0]+' '+pf[1])}</span>`:''}${isV(it)?`<span class="vd">${pendOf(it.id)?'⏳ ':''}${v?(v[0]=='맞음'?'✓ ':'✕ '):''}${it.dur?it.dur.toFixed(1)+'s':'▶'}</span>`:''}<div class="sc"><b></b><u></u></div></div><p>${esc(it.name)}</p><small>${esc(sub(it))}</small></div>`}
 function moreCards(){const g=$('#grid');if(!g)return;const L=V.list,n=Math.min(L.length,V.shown+cols()*12);if(n<=V.shown)return;const tmp=document.createElement('div');let h='';for(let i=V.shown;i<n;i++)h+=cardHTML(L[i],i);tmp.innerHTML=h;paintSheets(tmp);while(tmp.firstChild)g.appendChild(tmp.firstChild);V.shown=n}
