@@ -39,6 +39,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .pfb{position:absolute;right:8px;top:8px;background:#000a;border-radius:10px;padding:1px 8px;font-size:11px;color:#cfe2ff}
 .pts{margin-top:10px}.pt{display:flex;gap:10px;align-items:flex-start;padding:9px 0 2px;border-top:1px solid #ffffff12}.pt b{font-size:14px}.pt.on b{color:#5aa2ff}.pt p{margin:3px 0 0;font-size:12px;line-height:1.45;color:var(--t2)}.ptr{flex:none}.ptr text{font-size:13px}.pth{display:flex;justify-content:space-between;font-size:12.5px;color:var(--t2);margin:12px 0 2px}.pth:first-of-type{margin-top:4px}.pth b{color:var(--t1,#f2f2f4);font-weight:600}
 #q::-webkit-search-cancel-button,#q::-webkit-search-decoration{-webkit-appearance:none;appearance:none}#q{-webkit-appearance:none;appearance:none}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:12px}.ctl small{flex-basis:100%;font-size:11.5px;color:var(--t2)}.cb{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;user-select:none}.cb.go{background:#1f6feb;color:#fff}.cb.stop{background:#3a1d1d;color:#ff8a80;border:1px solid #ff8a8055}.cb:active{transform:scale(.96)}.sheet .go.red{background:#d93025}
 .mob{position:absolute;left:8px;bottom:8px;background:#0b6b3acc;border-radius:10px;padding:1px 8px;font-size:11px;color:#d9ffe8}
 .vd{position:absolute;right:8px;bottom:8px;background:#000a;border-radius:8px;padding:0 6px;font-size:11px}
 .sc{position:absolute;inset:0;background:#141416 no-repeat;display:none}.sc b{position:absolute;left:8px;top:8px;background:#000b;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:400}
@@ -216,7 +217,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=21;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=22;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -453,6 +454,8 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  if(a=='menu'){V.drawer=true;return render()}
  if(a=='selon'){V.selm=true;V.sel=new Set();V.dragOn=true;V.pop='';return render()}
  if(a=='stat'){V.stat=true;V.drawer=false;return render()}if(a=='statx'){V.stat=false;return render()}
+  if(a=='autoOn'||a=='autoOff'){const on=a=='autoOn',s=document.createElement('div');s.innerHTML=`<div class="dim in"></div><div class="sheet in"><h3>${on?'추출기를 시작할까요?':'추출기를 멈출까요?'}</h3><p>${on?'PC에서 재시작기를 켜고 멈춘 지점부터 이어서 진행합니다. 작업 창은 최소화·낮은 우선순위로 열립니다.':'지금 작업 창을 닫고 5분 안에 멈춥니다. 하던 작업은 기록(RESUME)에 남아 다시 시작하면 이어서 합니다.'}</p><div class="bt"><b data-n>취소</b><b class="go${on?'':' red'}" data-y>${on?'시작':'정지'}</b></div></div>`;s.style.cssText='position:fixed;inset:0;z-index:9999';$('#app').appendChild(s);
+   s.onclick=ev=>{if(ev.target.closest('[data-y]')){act({type:on?'auto_start':'auto_stop'},on?'추출기 시작 요청':'추출기 정지 요청');if(V.stat)statView()}if(ev.target.closest('[data-y],[data-n],.dim'))s.remove();ev.stopPropagation()};return}
  if(a=='sort'||a=='rv'||a=='who'){V.pop=V.pop==a?'':a;render();const x=$('#rvx');if(x)x.onkeydown=ev=>{if(ev.key=='Enter'&&x.value.trim()){V.pop='';act({type:'verify',items:targets.map(t=>t.id),result:'틀림',reason:x.value.trim()},'검수: 틀림('+x.value.trim()+')');autoNext()}};return}
  if(a=='selx'){V.selm=false;V.sel.clear();return render()}if(a=='selall'){V.list.forEach(it=>V.sel.add(it.id));return render()}if(a=='selinv'){const n=new Set();V.list.forEach(it=>{if(!V.sel.has(it.id))n.add(it.id)});V.sel=n;return render()}
  if(a=='close'){return closeDetail()}
@@ -480,11 +483,16 @@ function ring(p,sz,sw,col,label){const r=(sz-sw)/2,c=2*Math.PI*r,v=Math.max(0,Ma
 // 작업의 '부' 설명: 부마다 이름·범위·내용·진행률 (parts.csv)
 function partsHTML(W){const PT=W.parts||[];if(!PT.length)return '';const cur=((W.steps||[]).find(s=>s.st=='진행')||{}).part;
  return `<div class="pts">${PT.map(p=>`<div class="pt${p.no==cur?' on':''}"><div class="ptr">${ring(p.pct,40,5,p.pct>=100?'#34c759':'#3e91ff',Math.round(p.pct))}</div><div><b>${esc(p.no)}부 · ${esc(p.name)}</b>${p.no==cur?'<span class="cp on" style="margin-left:6px">지금</span>':''}<p>📦 ${esc(p.scope)}</p><p>🔧 ${esc(p.what)}</p></div></div>`).join('')}</div>`}
+// 추출기(무인 작업) 시작·정지 버튼 — 요청은 드라이브 inbox → PC 에이전트가 15초 안에 반영
+function ctlHTML(st,a,stale){const run=a.state=='on'||a.state=='late',pend=PEND.filter(x=>x.type=='auto_start'||x.type=='auto_stop').filter(x=>x.t/1000>(st.time||0)-5).pop(),c=st.ctl;
+ let h='<div class="ctl">';if(pend)h+=`<span class="cp on">⏳ ${pend.type=='auto_start'?'시작':'정지'} 요청 ${pend.sent?'보냄 · PC 반영 대기':'보내는 중'}</span>`;
+ else if(a.state=='done')h+='<span class="cp">전체 작업 완료</span>';else if(run)h+='<b class="cb stop" data-a="autoOff">■ 추출기 정지</b>';else h+=`<b class="cb go" data-a="autoOn">▶ 추출기 시작</b>`;
+ if(stale&&!pend)h+='<small>PC가 꺼져 있으면 켜질 때 반영</small>';if(c&&!pend&&Date.now()/1000-c.t<86400)h+=`<small>최근: ${esc(c.msg)} · ${ago(Math.round((Date.now()/1000-c.t)/60))}</small>`;return h+'</div>'}
 function statView(){const st=D.status;const old=$('#stat');const y0=old?old.scrollTop:0;if(old)old.remove();const el=document.createElement('div');el.id='stat';if(!old)el.className='in';let h=`<div class="selh" style="padding:0"><span class="ib" data-a="statx">✕</span><b>추출 현황</b></div>`;
  if(!st)h+='<div class="card">현황 파일이 아직 없습니다.</div>';else{const age=Math.round((Date.now()/1000-st.time)/60),stale=age>5,a=st.auto||{},lv=st.live||{};
   const ws=(st.works||[]),act=ws.filter(w=>!w.done),W=act[0]||ws[0],tot=act.length?act.reduce((s,w)=>s+w.pct,0)/act.length:(ws.length?100:0),col=stale?'#777':(a.color||'#3e91ff');
   // 1) 전체 진행도
-  h+=`<div class="card sv1"><div>${ring(tot,132,13,col,Math.round(tot)+'%')}</div><div class="sv1r"><h4>전체 진행도</h4><div class="chips"><span class="cp" style="--c:${col}"><i></i>${stale?'PC 꺼짐':esc((a.label||'').replace('무인 작업 ',''))}</span><span class="cp">📡 ${ago(age)}</span>${st.disk?`<span class="cp">💾 D ${st.disk.D}GB</span>`:''}<span class="cp">🗂 ${(st.items||0).toLocaleString()}</span>${lv.queue!=null?`<span class="cp">⏳ 대기 ${lv.queue}</span>`:''}${(lv.running||[]).length?`<span class="cp">🎬 렌더 ${(lv.running||[]).length}</span>`:''}</div></div></div>`;
+  h+=`<div class="card sv1"><div>${ring(tot,132,13,col,Math.round(tot)+'%')}</div><div class="sv1r"><h4>전체 진행도</h4><div class="chips"><span class="cp" style="--c:${col}"><i></i>${stale?'PC 꺼짐':esc((a.label||'').replace('무인 작업 ',''))}</span><span class="cp">📡 ${ago(age)}</span>${st.disk?`<span class="cp">💾 D ${st.disk.D}GB</span>`:''}<span class="cp">🗂 ${(st.items||0).toLocaleString()}</span>${lv.queue!=null?`<span class="cp">⏳ 대기 ${lv.queue}</span>`:''}${(lv.running||[]).length?`<span class="cp">🎬 렌더 ${(lv.running||[]).length}</span>`:''}</div>${ctlHTML(st,a,stale)}</div></div>`;
   if((st.problems||[]).length)h+=`<div class="card warnc">${st.problems.map(p=>`<div class="row"><b class="warn">⚠ ${esc(p)}</b></div>`).join('')}</div>`;
   // 2) 지금 하고 있는 작업
   if(W){const parts=String(W.now||'').split('|').map(x=>x.trim()),tag=parts[1]||W.name,desc=(parts[2]||parts[0]||'').split(' — ');const mdl=String(lv.model||'').split('|');
