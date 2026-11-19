@@ -90,6 +90,25 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .vid .msg.err{animation:none;border:0;width:auto;height:auto;padding:20px;opacity:1}
 .tb{bottom:calc(14px + env(safe-area-inset-bottom))}.tb.hide{transform:translate(-50%,calc(100% + 40px));opacity:0;pointer-events:none}.tb.drag{transition:none}
 .tbh{position:absolute;left:50%;bottom:0;width:120px;height:30px;margin-left:-60px;z-index:15;display:none;align-items:center;justify-content:center;touch-action:none}.tbh:after{content:'';width:46px;height:5px;border-radius:3px;background:#ffffff8c}.tb.hide+.tbh{display:flex}
+.th.pkw:after{content:'';position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px;border-radius:50%;border:3px solid #ffffff30;border-top-color:#fff;animation:spin .8s linear infinite;z-index:2}
+.th .pkv{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:1}
+.pgr.opening .gh{visibility:hidden}.pgr{transform-origin:0 0}
+#stat.in{animation:inU .42s cubic-bezier(.22,.9,.24,1)}
+.sv1{display:flex;align-items:center;gap:16px}.sv1r{flex:1;min-width:0}.sv1r h4{font-size:15px!important;color:var(--t1)!important;margin-bottom:10px!important}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.cp{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border-radius:13px;padding:4px 10px;font-size:12px;white-space:nowrap}.cp i{width:8px;height:8px;border-radius:50%;background:var(--c)}.cp.on{background:#1d3a66;color:#cfe2ff;font-weight:600}
+.warnc{border:1px solid #ffcf6b55}
+.nowr{display:flex;gap:12px;align-items:flex-start}.nowt{display:flex;gap:6px;flex-wrap:wrap}.nowd{margin:8px 0 0;font-size:15px;font-weight:600;line-height:1.35}.nown{margin:8px 0 0;color:var(--t2);font-size:12.5px}
+.pulse{flex:none;width:12px;height:12px;border-radius:50%;background:#5fd68a;margin-top:6px;box-shadow:0 0 0 0 #5fd68a88;animation:pls 1.6s infinite}.pulse.off{background:#666;animation:none}@keyframes pls{70%{box-shadow:0 0 0 12px #5fd68a00}100%{box-shadow:0 0 0 0 #5fd68a00}}
+.stp{display:flex;align-items:flex-start;overflow-x:auto;scrollbar-width:none;padding:4px 0}.sp{flex:1;min-width:58px;display:flex;flex-direction:column;align-items:center;position:relative}
+.sp u{position:absolute;right:50%;top:21px;width:100%;height:4px;background:var(--s3);margin-right:22px;width:calc(100% - 44px);border-radius:2px}.sp.d u,.sp.g u{background:#5fd68a}
+.spc{width:44px;height:44px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-weight:700;position:relative;color:var(--t2)}.sp.d .spc{background:#5fd68a;color:#062b14;font-size:20px}.sp.g .spc{background:none}.spc svg{position:absolute;left:0;top:0}.spc em{font-style:normal;font-size:13px;color:var(--t1)}
+.sp small{margin-top:6px;font-size:11px;color:var(--t2);text-align:center;line-height:1.2;max-width:76px}.sp.g small{color:var(--t1)}
+.lg{float:right;font-size:11px;color:var(--t2)}.lg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 8px}
+.gb{margin:10px 0}.gbn{display:flex;justify-content:space-between;gap:8px;font-size:13px}.gbn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}.gbn span{color:var(--t2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gbt{position:relative;height:10px;margin-top:5px;border-radius:5px;background:#ffffff0a;overflow:hidden}.gbt u{position:absolute;left:0;top:0;bottom:0;border-radius:5px}.gbt{background:#ffffff1c}.gbt .cl{background:#3e91ff}.gbt .cl.ok{background:#5fd68a}.gbt .cl.np{background:#6b7280}
+.bd{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.bt{background:var(--s2);border-radius:16px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;border-top:3px solid var(--c)}
+.btr{position:relative;width:46px;height:46px}.btr em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;font-weight:700}
+.bt b{font-size:12px;font-weight:600;line-height:1.2;max-height:2.4em;overflow:hidden}.bt span{font-size:11px;color:var(--t2)}
 .vid .pv{position:absolute;left:0;top:0;width:100%;height:100%;background-repeat:no-repeat;animation:inF .15s}
 .th canvas.tc{position:absolute;left:0;top:0;width:100%;height:100%;animation:inF .18s}
 .sk{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:3;touch-action:none}.sk u{position:absolute;left:0;bottom:0;height:3px;width:0;background:#fff;opacity:.85;transition:height .15s}.sk.drag u{height:7px}
@@ -255,7 +274,7 @@ function render(){const app=$('#app');if(!D.cfg)return;const y=$('#grid')?$('#gr
  app.innerHTML=h;const was=render._w||{};render._w={view:V.view,drawer:!!V.drawer,pop:V.pop};
  if(V.drawer&&!was.drawer)app.querySelectorAll('.drawer,.dim').forEach(e=>e.classList.add('in'));
  if(V.pop&&V.pop!==was.pop){const pe=app.querySelector('.pop');if(pe)pe.classList.add('in')}
- if(was.view&&was.view!==V.view){const m=app.querySelector(V.view=='detail'?'#det':'.main');if(m){if(V.view=='detail'&&V._org)m.style.transformOrigin=V._org[0]+'px '+V._org[1]+'px';m.classList.add('in')}}
+ if(was.view&&was.view!==V.view){if(V.view=='detail')openAnim();else{const m=app.querySelector('.main');if(m)m.classList.add('in')}}
  bindDrawer();bindBar();if(V.view=='grid'){const want=keep?V._kept:0;V.shown=0;do{moreCards()}while(V.shown<Math.min(V.list.length,want));$('#grid').scrollTop=keep?y:0;$('#grid').onscroll=e=>{if(e.target.scrollTop+e.target.clientHeight>e.target.scrollHeight-Math.max(1600,e.target.clientHeight*3))moreCards()};V._kept=V.shown;bindGrid()}
  else bindDetail();if(V.stat)statView()}
 function renderTop(){const t=$('#top');if(t&&!V.selm&&document.activeElement!==$('#q'))t.innerHTML=topHTML()}
@@ -325,7 +344,7 @@ function bindDrawer(){const dr=$('.drawer'),dm=$('.dim');if(!dr)return;let p=nul
  dr.addEventListener('touchend',e=>end(false,e.timeStamp),{passive:true});dr.addEventListener('touchcancel',e=>end(true,e.timeStamp),{passive:true})}
 function go(i){if(i<0||i>=V.list.length)return;V.cur=i;V.ab=null;V.pop='';const id=V.list[i].id;S.recent=[id].concat(S.recent.filter(x=>x!=id)).slice(0,60);save();render()}
 // ---------- 격자 손동작: 톡=열기, 꾹=선택(끌면 연속 선택), 옆으로 밀기=미리보기, 두 손가락=줄 수 ----------
-function bindGrid(){const g=$('#grid');let t0=null,mode='',timer=0,pin=0,lastI=-1,scEl=null,pkT=0;
+function bindGrid(){const g=$('#grid');let t0=null,mode='',timer=0,pin=0,lastI=-1,scEl=null,pkT=0,pkEl=null;
  const posK=t=>{const r=t0.cd.querySelector('.th').getBoundingClientRect();return Math.max(0,Math.min(0.999,(t.clientX-r.left)/r.width))};
  const frame=(cd,k)=>{const it=V.list[+cd.dataset.i];if(!it||!isV(it)||it.scrub<0)return false;const c=D.cfg.scrubinfo,th=cd.querySelector('.th'),fr=Math.floor(k*c.n);
   scEl=th.querySelector('.sc');scEl.style.display='block';scEl.style.backgroundSize=(c.n*100)+'% '+(c.per*100)+'%';scEl.style.backgroundPosition=(fr/(c.n-1)*100)+'% '+((it.scrub%c.per)/(c.per-1)*100)+'%';
@@ -339,20 +358,33 @@ function bindGrid(){const g=$('#grid');let t0=null,mode='',timer=0,pin=0,lastI=-
   peekStop();if(t0.cd&&!V.selm){const cd0=t0.cd;setTimeout(()=>{if(t0&&t0.cd===cd0&&!mode){const i0=V.list[+cd0.dataset.i];if(i0&&isV(i0))B.media(i0).catch(()=>{})}},110)}
   if(t0.cd)timer=setTimeout(()=>{if(!t0)return;const it=V.list[+t0.cd.dataset.i];
    if(V.selm){mode='select';V.dragOn=!V.sel.has(it.id);mark(t0.cd)}
-   else{mode='peek';const c=D.cfg.scrubinfo;let f=0;if(frame(t0.cd,0)){const cd=t0.cd;pkT=setInterval(()=>{f=(f+1)%c.n;frame(cd,f/c.n)},Math.max(70,Math.min(200,(it.dur||1)*1000/c.n)))}}
+   else{mode='peek';const c=D.cfg.scrubinfo;let f=0;const cd=t0.cd;if(frame(cd,0)){pkT=setInterval(()=>{f=(f+1)%c.n;frame(cd,f/c.n)},Math.max(70,Math.min(200,(it.dur||1)*1000/c.n)))}
+    else if(isV(it)){pkEl=cd.querySelector('.th');pkEl.classList.add('pkw');B.media(it).then(u=>{if(mode!='peek'||!t0||t0.cd!==cd||!cd.isConnected)return;const v=document.createElement('video');v.className='pkv';v.muted=true;v.loop=true;v.autoplay=true;v.playsInline=true;v.setAttribute('playsinline','');v.src=u;cd.querySelector('.th').appendChild(v);const pl=v.play();if(pl&&pl.catch)pl.catch(()=>{})}).catch(()=>{})}}
    if(navigator.vibrate)navigator.vibrate(12)},380)},{passive:true});
  g.addEventListener('touchmove',e=>{if(mode=='pinch'&&e.touches.length==2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(d>pin*1.25||d<pin*0.8){const n=Math.max(1,Math.min(4,cols()+(d>pin?-1:1)));pin=d;if(n!=cols()){S.cols=n;save();V._kept=V.shown;render()}}e.preventDefault();return}
   if(!t0)return;const t=e.touches[0],dx=t.clientX-t0.x,dy=t.clientY-t0.y;
   if(mode=='select'){e.preventDefault();mark(cardAt(t.clientX,t.clientY));return}
-  if(mode=='peek'){e.preventDefault();if(Math.abs(dx)>12||!pkT){peekStop();frame(t0.cd,posK(t))}return}
+  if(mode=='peek'){e.preventDefault();const pv=t0.cd.querySelector('.pkv');if(pv){const k=posK(t);if(Math.abs(dx)>12&&pv.duration){pv.pause();pv.currentTime=k*pv.duration*0.999}}else if(Math.abs(dx)>12||!pkT){peekStop();frame(t0.cd,posK(t))}return}
   if(!mode&&(Math.abs(dx)>10||Math.abs(dy)>10)){clearTimeout(timer);mode=Math.abs(dx)>Math.abs(dy)&&t0.cd&&!V.selm?'scrub':'scroll'}
   if(mode=='scrub'){e.preventDefault();frame(t0.cd,posK(t))}},{passive:false});
- const fin=e=>{clearTimeout(timer);peekStop();if(scEl){scEl.style.display='none';scEl=null}
+ const fin=e=>{clearTimeout(timer);peekStop();if(pkEl){pkEl.classList.remove('pkw');pkEl=null}g.querySelectorAll('.pkv').forEach(v=>{try{v.pause()}catch(x){}v.remove()});if(scEl){scEl.style.display='none';scEl=null}
   if(!mode&&t0&&t0.cd&&e.changedTouches.length){tap(t0.cd)}t0=null;if(mode!='pinch'||e.touches.length==0)mode=''};g.addEventListener('touchend',fin,{passive:true});g.addEventListener('touchcancel',e=>{mode='x';fin(e)},{passive:true});
  g.addEventListener('click',e=>{if('ontouchstart' in window)return;const cd=e.target.closest('.cd');if(cd)tap(cd)})}
 function updSel(){const b=document.querySelector('.selh b');if(b)b.textContent=V.sel.size+'개 선택됨';const w=document.querySelector('.tb .who small');if(w)w.textContent=(S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스')+' · '+V.sel.size+'개'}
-function tap(cd){const i=+cd.dataset.i,id=V.list[i].id;if(V.selm){if(V.sel.has(id))V.sel.delete(id);else V.sel.add(id);cd.classList.toggle('sel');updSel();return}const r0=cd.getBoundingClientRect();V._org=[r0.left+r0.width/2,r0.top+r0.height/2];V.view='detail';V._y=$('#grid').scrollTop;go(i)}
-function closeDetail(){const d=$('#det'),fin=()=>{V.view='grid';V.pop='';render();const g=$('#grid');if(g)g.scrollTop=V._y||0};if(!d||V._closing)return fin();V._closing=1;d.classList.add('out');setTimeout(()=>{V._closing=0;fin()},150)}
+function tap(cd){const i=+cd.dataset.i,id=V.list[i].id;if(V.selm){if(V.sel.has(id))V.sel.delete(id);else V.sel.add(id);cd.classList.toggle('sel');updSel();return}const r0=cd.querySelector('.th').getBoundingClientRect();V._rect={left:r0.left,top:r0.top,width:r0.width,height:r0.height};V._openI=i;V.view='detail';V._y=$('#grid').scrollTop;go(i)}
+const EZ='cubic-bezier(.22,.9,.24,1)';
+function flip(){const pg=$('#pgr'),box=$('#vid'),o=V._rect;if(!pg||!box||!o||!pg.animate)return null;const r=box.getBoundingClientRect();if(!r.width)return null;
+ return {pg,from:'translate('+(o.left-r.left)+'px,'+(o.top-r.top)+'px) scale('+(o.width/r.width)+','+(o.height/r.height)+')'}}
+function openAnim(){const det=$('#det');if(!det)return;const f=flip();if(!f){det.classList.add('in');return}const pg=f.pg;pg.style.transformOrigin='0 0';pg.classList.add('opening');
+ const a=pg.animate([{transform:f.from},{transform:'none'}],{duration:400,easing:EZ});a.onfinish=a.oncancel=()=>pg.classList.remove('opening');
+ const rest=[...det.children].filter(e=>e!==pg).concat([...document.querySelectorAll('#app>.rail,#app>.tb')]);
+ rest.forEach(e=>e.animate([{opacity:0,transform:(getComputedStyle(e).transform=='none'?'':getComputedStyle(e).transform+' ')+'translateY(18px)'},{opacity:1,transform:getComputedStyle(e).transform}],{duration:380,delay:70,easing:EZ,fill:'backwards'}))}
+function closeDetail(){const d=$('#det'),fin=()=>{V._closing=0;V.view='grid';V.pop='';render();const g=$('#grid');if(g)g.scrollTop=V._y||0};if(!d||V._closing)return fin();V._closing=1;
+ const f=V.cur===V._openI?flip():null;
+ if(f){const pg=f.pg;pg.style.transformOrigin='0 0';pg.classList.add('opening');d.scrollTop=0;const f2=flip()||f;
+  [...d.children].filter(e=>e!==pg).concat([...document.querySelectorAll('#app>.rail,#app>.tb,#app>.pop')]).forEach(e=>e.animate([{opacity:1},{opacity:0}],{duration:150,fill:'forwards'}));
+  const a=pg.animate([{transform:'none'},{transform:f2.from}],{duration:270,easing:'cubic-bezier(.3,.7,.2,1)',fill:'forwards'});let done=false;const go=()=>{if(!done){done=true;fin()}};a.onfinish=go;setTimeout(go,330)}
+ else{d.classList.add('out');setTimeout(fin,160)}}
 // 뒤로 가기(갤럭시 뒤로 제스처): 열린 것부터 하나씩 닫고, 닫을 게 없으면 앱 종료
 function backOnce(){if($('.sheet')){document.querySelectorAll('.sheet,.dim:not(.dd)').forEach(x=>x.remove());return true}if(V.pop){V.pop='';V._kept=V.shown;render();return true}if(V.drawer){V.drawer=false;V._kept=V.shown;render();return true}if(V.stat){V.stat=false;V._kept=V.shown;render();return true}
  if(V.view=='detail'){closeDetail();return true}if(V.selm){V.selm=false;V.sel.clear();V._kept=V.shown;render();return true}return false}
@@ -401,16 +433,31 @@ document.addEventListener('input',e=>{if(e.target.id!='q')return;const raw=e.tar
  s.onclick=ev=>{const d=ev.target.closest('div[data-t],div[data-name]');if(!d)return;if(d.dataset.t)(neg?S.not:S.tags).push(d.dataset.t),S.text='';else S.text=raw;V._kept=0;save();render();ev.stopPropagation()}});
 document.addEventListener('keydown',e=>{if(e.target.id=='q'&&e.key=='Enter'){S.text=e.target.value.trim();V._kept=0;save();render()}});
 // ---------- 추출 현황 ----------
-function statView(){const st=D.status;const old=$('#stat');if(old)old.remove();const el=document.createElement('div');el.id='stat';let h=`<div class="selh" style="padding:0"><span class="ib" data-a="statx">✕</span><b>추출 현황</b></div>`;
- if(!st)h+='<div class="card">현황 파일이 아직 없습니다.</div>';else{const age=Math.round((Date.now()/1000-st.time)/60),stale=age>5,a=st.auto||{};
-  h+=`<div class="card"><h4>PC 상태</h4><div class="row"><b class="${stale?'bad':''}">${stale?'PC 꺼짐 또는 동기화 안 됨':'PC 켜짐'}</b><span>마지막 신호 ${ago(age)}</span></div><div class="row"><b style="color:${stale?'var(--t2)':a.color}">${esc(a.label||'')}${stale?' (그때 기준)':''}</b><span>${esc((a.note||'').slice(0,60))}</span></div>${st.disk?`<div class="row"><b>남은 용량</b><span>D ${st.disk.D}GB · C ${st.disk.C}GB</span></div>`:''}<div class="row"><b>Eagle 목록</b><span>${(st.items||0).toLocaleString()}개 · ${ago(Math.round((Date.now()/1000-(st.scan_time||0))/60))} 읽음</span></div></div>`;
-  if((st.problems||[]).length)h+=`<div class="card"><h4>문제 ${st.problems.length}건</h4>${st.problems.map(p=>`<div class="row"><b class="warn">${esc(p)}</b></div>`).join('')}</div>`;
-  const pend=PEND.length,fail=(st.applied||[]).filter(x=>!x.ok).slice(-5);
-  h+=`<div class="card"><h4>내 요청</h4><div class="row"><b>PC 반영 대기</b><span>${pend}건${PEND.some(a=>a.err)?' · 전송 실패 있음':''}</span></div>${fail.map(f=>`<div class="row"><b class="bad">반영 실패</b><span>${esc(f.msg)}</span></div>`).join('')}${(st.queue||[]).filter(r=>r['상태']=='요청').slice(-8).map(r=>`<div class="row"><b>🎯 ${esc(r['이름'])}</b><span>${esc(r['게임'])} · ${esc(r['시각'].slice(5,16))}</span></div>`).join('')}</div>`;
-  (st.works||[]).filter(w=>!w.done).slice(0,5).forEach(w=>{h+=`<div class="card"><h4>진행 중 · ${esc(w.name)}${w.age!=null?' · 기록 '+ago(w.age):''}</h4><div class="row"><b>${w.pct}%</b><span>${esc((w.now||'').slice(0,70))}</span></div><div class="bar"><u style="width:${w.pct}%"></u></div>${w.steps.map(s=>`<div class="row"><b>${esc(s.no+' '+s.name)}</b><span>${esc(s.st)} ${s.pct}%</span></div>`).join('')}</div>`});
-  const G=Object.entries(st.games||{}).sort((a,b)=>b[1].clip-a[1].clip);
-  h+=`<div class="card"><h4>게임별 (Eagle에 등록된 수)</h4>${G.map(([g,s])=>`<div class="row"><b>${esc(g)}</b><span>이미지 ${s.img} · 클립 ${s.clip}${s.clip_need?' · 확인필요 '+s.clip_need:''}${s.v_ok||s.v_bad?' · 검수 ✓'+s.v_ok+' ✕'+s.v_bad:''}</span></div>`).join('')}</div>`}
- el.innerHTML=h;$('#app').appendChild(el)}
+const gslug=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'').replace(/^the/,'');
+function ring(p,sz,sw,col,label){const r=(sz-sw)/2,c=2*Math.PI*r,v=Math.max(0,Math.min(100,p||0));return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#ffffff14" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c*v/100} ${c}" transform="rotate(-90 ${sz/2} ${sz/2})"/>${label!=null?`<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#f2f2f4" font-size="${sz*0.25}" font-weight="700">${label}</text>`:''}</svg>`}
+function statView(){const st=D.status;const old=$('#stat');const y0=old?old.scrollTop:0;if(old)old.remove();const el=document.createElement('div');el.id='stat';if(!old)el.className='in';let h=`<div class="selh" style="padding:0"><span class="ib" data-a="statx">✕</span><b>추출 현황</b></div>`;
+ if(!st)h+='<div class="card">현황 파일이 아직 없습니다.</div>';else{const age=Math.round((Date.now()/1000-st.time)/60),stale=age>5,a=st.auto||{},lv=st.live||{};
+  const ws=(st.works||[]),act=ws.filter(w=>!w.done),W=act[0]||ws[0],tot=act.length?act.reduce((s,w)=>s+w.pct,0)/act.length:(ws.length?100:0),col=stale?'#777':(a.color||'#3e91ff');
+  // 1) 전체 진행도
+  h+=`<div class="card sv1"><div>${ring(tot,132,13,col,Math.round(tot)+'%')}</div><div class="sv1r"><h4>전체 진행도</h4><div class="chips"><span class="cp" style="--c:${col}"><i></i>${stale?'PC 꺼짐':esc((a.label||'').replace('무인 작업 ',''))}</span><span class="cp">📡 ${ago(age)}</span>${st.disk?`<span class="cp">💾 D ${st.disk.D}GB</span>`:''}<span class="cp">🗂 ${(st.items||0).toLocaleString()}</span>${lv.queue!=null?`<span class="cp">⏳ 대기 ${lv.queue}</span>`:''}${(lv.running||[]).length?`<span class="cp">🎬 렌더 ${(lv.running||[]).length}</span>`:''}</div></div></div>`;
+  if((st.problems||[]).length)h+=`<div class="card warnc">${st.problems.map(p=>`<div class="row"><b class="warn">⚠ ${esc(p)}</b></div>`).join('')}</div>`;
+  // 2) 지금 하고 있는 작업
+  if(W){const parts=String(W.now||'').split('|').map(x=>x.trim()),tag=parts[1]||W.name,desc=(parts[2]||parts[0]||'').split(' — ');const mdl=String(lv.model||'').split('|');
+   h+=`<div class="card"><h4>지금 하고 있는 작업</h4><div class="nowr"><span class="pulse${stale||W.done?' off':''}"></span><div><div class="nowt"><span class="cp on">${esc(tag)}</span>${mdl[1]?`<span class="cp">🧠 ${esc(mdl[1])}</span>`:''}<span class="cp">${W.age!=null?ago(W.age):''}</span></div><p class="nowd">${esc(desc[0])}</p>${desc[1]?`<p class="nown">다음 ▸ ${esc(desc.slice(1).join(' — ').slice(0,120))}</p>`:''}</div></div></div>`;
+   // 3) 단계별 진행도
+   const stp=W.steps||[];h+=`<div class="card"><h4>단계별 진행도</h4><div class="stp">${stp.map((s,i)=>{const d=s.st=='완료'||s.pct>=100,g=!d&&(s.st=='진행'||s.pct>0);return `<div class="sp${d?' d':g?' g':''}">${i?'<u></u>':''}<div class="spc">${d?'✓':g?ring(s.pct,44,5,'#3e91ff',null)+'<em>'+Math.round(s.pct)+'</em>':esc(s.no)}</div><small>${esc(s.name.split(/[(—]/)[0].trim().slice(0,12))}</small></div>`}).join('')}</div>${(()=>{const c=stp.find(s=>s.st=='진행')||stp.find(s=>s.pct<100);return c?`<p class="nown">${esc(c.no)}단계 · ${esc(c.name.slice(0,110))}</p>`:''})()}</div>`}
+  // 4) 게임별 진행도 (클립 수 / 계획 수)
+  const plan=(st.targets&&st.targets.plan)||{},ord=(st.targets&&st.targets.order)||{},pk=Object.keys(plan);
+  const GN=Object.keys(st.games||{}),exact={};GN.forEach(g=>{const sl=gslug(g);if(pk.includes(sl))exact[g]=sl});const used=new Set(Object.values(exact));
+  const cpl=(x,y)=>{let i=0;while(i<x.length&&i<y.length&&x[i]==y[i])i++;return i};
+  const G=Object.entries(st.games||{}).map(([g,s])=>{const sl=gslug(g),k=exact[g]||pk.find(x=>!used.has(x)&&cpl(x,sl)>Math.min(x.length,sl.length)*0.8);return {g,s,plan:k?plan[k]:0,ord:k&&ord[k]?ord[k]:999}}).sort((a,b)=>a.ord-b.ord||b.s.clip-a.s.clip);
+  h+=`<div class="card"><h4>게임별 진행도 <span class="lg"><i style="background:#5fd68a"></i>계획 달성 <i style="background:#3e91ff"></i>진행 <i style="background:#6b7280"></i>계획 없음</span></h4>${G.filter(x=>x.s.clip||x.plan).map(x=>{const done=x.plan&&x.s.clip>=x.plan,pc=x.plan?Math.min(100,x.s.clip/x.plan*100):100;return `<div class="gb"><div class="gbn"><b>${esc(x.g)}</b><span>${x.s.clip.toLocaleString()}${x.plan?' / '+x.plan.toLocaleString()+' · '+Math.round(x.s.clip/x.plan*100)+'%':' · 계획 없음'}</span></div><div class="gbt"><u class="cl${done?' ok':x.plan?'':' np'}" style="width:${pc}%"></u></div></div>`}).join('')}</div>`;
+  // 5) 게임 추출 현황판
+  h+=`<div class="card"><h4>게임 추출 현황판 <span class="lg"><i style="background:#5fd68a"></i>완료 <i style="background:#3e91ff"></i>진행 <i style="background:#ffcf6b"></i>이미지만 <i style="background:#555"></i>대기</span></h4><div class="bd">${G.map(x=>{const s=x.s,done=x.plan&&s.clip>=x.plan,c=done?'#5fd68a':s.clip?'#3e91ff':s.img?'#ffcf6b':'#555',p=x.plan?s.clip/x.plan*100:(s.clip?100:0);
+   return `<div class="bt" style="--c:${c}"><div class="btr">${ring(p,46,5,c,null)}<em>${done?'✓':x.plan?Math.round(p):s.clip?'🎬':s.img?'🖼':'·'}</em></div><b>${esc(x.g)}</b><span>🖼 ${s.img} · 🎬 ${s.clip}</span>${s.clip_need||s.img_need?`<span class="warn">🤖 ${s.clip_need+s.img_need}</span>`:''}${s.v_ok||s.v_bad?`<span>✓${s.v_ok} ✕${s.v_bad}</span>`:''}</div>`}).join('')}</div></div>`;
+  const pend=PEND.length,fail=(st.applied||[]).filter(x=>!x.ok).slice(-5),rq=(st.queue||[]).filter(r=>r['상태']=='요청').slice(-8);
+  if(pend||fail.length||rq.length)h+=`<div class="card"><h4>내 요청</h4>${pend?`<div class="row"><b>PC 반영 대기</b><span>${pend}건${PEND.some(a=>a.err)?' · 전송 실패 있음':''}</span></div>`:''}${fail.map(f=>`<div class="row"><b class="bad">반영 실패</b><span>${esc(f.msg)}</span></div>`).join('')}${rq.map(r=>`<div class="row"><b>🎯 ${esc(r['이름'])}</b><span>${esc(r['게임'])} · ${esc(r['시각'].slice(5,16))}</span></div>`).join('')}</div>`}
+ el.innerHTML=h;$('#app').appendChild(el);el.scrollTop=y0}
 // ---------- 시작·주기 갱신 ----------
 async function refresh(first){try{const st=await B.get(B.ids.status,'json');const newer=!D.status||st.time!=D.status.time;D.status=st;D.live=true;if(WEB)LS.set('status',st);
   const quiet=V.view=='grid'&&!V.selm&&!V.pop&&document.activeElement!==$('#q');
