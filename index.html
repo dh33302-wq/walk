@@ -37,6 +37,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .selm .ck{display:block}.cd.sel .th{box-shadow:inset 0 0 0 3px var(--ac)}.cd.sel .ck{background:var(--ac);border-color:var(--ac)}
 .cd.sel .ck:after{content:'✓';position:absolute;left:5px;top:0;font-size:14px;color:#fff;font-weight:700}
 .pfb{position:absolute;right:8px;top:8px;background:#000a;border-radius:10px;padding:1px 8px;font-size:11px;color:#cfe2ff}
+.mob{position:absolute;left:8px;bottom:8px;background:#0b6b3acc;border-radius:10px;padding:1px 8px;font-size:11px;color:#d9ffe8}
 .vd{position:absolute;right:8px;bottom:8px;background:#000a;border-radius:8px;padding:0 6px;font-size:11px}
 .sc{position:absolute;inset:0;background:#141416 no-repeat;display:none}.sc b{position:absolute;left:8px;top:8px;background:#000b;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:400}
 .sc u{position:absolute;left:0;bottom:0;height:4px;background:#fff}
@@ -193,9 +194,16 @@ const save=()=>LS.set('state',S),VIDEO=['mp4','webm','mov','m4v'],isV=it=>VIDEO.
 function ingest(ix){if(D.cfg&&JSON.stringify(D.cfg.thumb)!=JSON.stringify(ix.thumb)){B.bm.clear();B._pre=0;for(const k in B.names)if(k.indexOf('thumbs')>=0)delete B.names[k]}D.time=ix.time;D.tags=ix.tags;D.cfg=ix;D.fby={};D.folders=ix.folders.map(f=>({id:f[0],name:f[1],parent:f[2],kids:[],n:0}));
  D.folders.forEach(f=>D.fby[f.id]=f);D.folders.forEach(f=>{if(f.parent&&D.fby[f.parent])D.fby[f.parent].kids.push(f)});
  D.items=ix.items.map(r=>({id:r[0],name:r[1],ext:r[2],dur:r[3],w:r[4],h:r[5],added:r[6],star:r[7],tags:r[8].map(i=>ix.tags[i]),folders:r[9].map(i=>ix.folders[i][0]),ann:r[10],thumb:r[11],scrub:r[12],fps:r[13]||0}));
- D.by={};D.items.forEach(it=>D.by[it.id]=it);D.verify=ix.verify||{};
+ D.by={};D.items.forEach(it=>D.by[it.id]=it);D.verify=ix.verify||{};markMo();
  const done=new Set(((D.status||{}).applied||[]).map(a=>a.id));PEND=PEND.filter(a=>!(done.has(a.id)&&(D.status.time||0)<=D.time+900));
  PEND.forEach(a=>applyLocal(a,1));LS.set('pend',PEND);count()}
+// ---------- 모션 추출 완료 표시: 🗂️캐릭터별 모션/<게임>/<캐릭터> 에 클립이 있는 캐릭터의 이미지 (묶음 규칙 = verify_v2\master_queue.py) ----------
+const MGP=[['ff16',['xvi','ff16','fantasy 16','fantasy16']],['ff7r',['vii','ff7','rebirth']],['lop',['lies of p','liesofp']],['sb',['stellar']],['lsa',['lost soul']],['thy',['thymesia']],['relic',['relic']],['khazan',['khazan']],['wuchang',['wuchang']],['wukong',['wukong']]];
+function markMo(){try{const gk=n=>{const s=(n||'').toLowerCase();for(const [k,p] of MGP)if(s==k||p.some(x=>s.includes(x)))return k;return s.replace(/[^0-9a-z]/g,'').slice(0,12)},nk=s=>(s||'').toLowerCase().replace(/[^0-9a-z가-힣]/g,'');
+ const ckey=name=>{let n=name.includes(' - ')?name.slice(name.indexOf(' - ')+3):name;n=n.replace(/\s*\([^)]*\)/g,'');const s=n.trim().split('_');return (s[0].length==1&&s.length>1?s.slice(0,2).join('_'):s[0]).trim()};
+ const clip={},first={};D.items.forEach(i=>{i.mo=0;if(!isV(i))return;for(const f of i.folders){const p=path(f);if(p.length>2&&p[0].startsWith('🗂')){const g=gk(p[1]),c=nk(p[2]);clip[g+'|'+c]=(clip[g+'|'+c]||0)+1;const fw=nk(p[2].split(/[ _]/)[0]);if(fw.length>3&&fw!=c)(first[g+'|'+fw]=first[g+'|'+fw]||new Set()).add(g+'|'+c);break}}});
+ D.items.forEach(i=>{if(isV(i)||!i.folders.some(f=>(path(f)[0]||'').startsWith('🧍')))return;const g=gk((i.tags.find(t=>t.startsWith('🎮'))||'').slice(2)),c=nk(ckey(i.name));
+  if(clip[g+'|'+c]){i.mo=clip[g+'|'+c];return}const t=i.tags.map(nk).find(t=>t&&clip[g+'|'+t]);if(t){i.mo=clip[g+'|'+t];return}if(first[g+'|'+c])i.mo=[...first[g+'|'+c]].reduce((a,k)=>a+clip[k],0)})}catch(e){}}
 function count(){D.folders.forEach(f=>f.n=0);const up=(f,seen)=>{while(f){if(seen.has(f.id))break;seen.add(f.id);f.n++;f=D.fby[f.parent]}};D.items.forEach(it=>{const seen=new Set();it.folders.forEach(id=>up(D.fby[id],seen))})}
 const path=id=>{const p=[];let f=D.fby[id];while(f){p.unshift(f.name);f=D.fby[f.parent]}return p};
 const desc=id=>{const s=new Set(),w=f=>{s.add(f.id);f.kids.forEach(w)};if(D.fby[id])w(D.fby[id]);return s};
@@ -205,6 +213,9 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='pf_add'||a.type=='pf_remove')a.items.forEach(id=>{const it=D.by[id];if(!it)return;const has=it.folders.includes(a.folder);if(add&&!has)it.folders.push(a.folder);if(!add&&has)it.folders=it.folders.filter(x=>x!=a.folder)});
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
+// 새 버전이 받아지면 목록 화면에서 한 번 자동으로 다시 열기 (두 번 열 필요 없음)
+(async()=>{try{if(!('caches' in window))return;const hs=async()=>{const c=await caches.open('eg-shell-v2'),r=await c.match('./');if(!r)return '';const t=await r.text();let h=0;for(let i=0;i<t.length;i++)h=(Math.imul(h,31)+t.charCodeAt(i))>>>0;return t.length+'_'+h};
+ const a=await hs();for(const ms of [2500,5000,9000]){await new Promise(r=>setTimeout(r,ms));const b=await hs();if(a&&b&&a!=b){if(sessionStorage.getItem('eg_upd')==b)return;if(V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&document.activeElement.id!='q'){sessionStorage.setItem('eg_upd',b);location.reload()}return}}}catch(e){}})();
 // ---------- 요청 보내기 (5초 동안 되돌리기 가능) ----------
 let toastT=0;
 function act(a,label){a.id='m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);a.t=Date.now();applyLocal(a,1);count();PEND.push(a);LS.set('pend',PEND);render();
@@ -257,7 +268,7 @@ function headHTML(L){let h;if(searching()){h=`<div class="big"><h1>검색 결과
   h=`<div class="big"><h1>${esc(nm)}</h1><p>${pp?esc(pp)+' · ':''}${L.length.toLocaleString()}개</p></div>`}
  return h}
 function cardHTML(it,i){const pf=it.folders.map(path).find(p=>p[0]&&p[0].startsWith('🎨'));const v=D.verify[it.id];
- return `<div class="cd${V.sel.has(it.id)?' sel':''}" data-i="${i}"><div class="th" ${thumbStyle(it)}><span class="ck"></span>${pf&&!V.selm?`<span class="pfb">${esc(emo(pf[pf.length-1])[0]+' '+pf[1])}</span>`:''}${isV(it)?`<span class="vd">${pendOf(it.id)?'⏳ ':''}${v?(v[0]=='맞음'?'✓ ':'✕ '):''}${it.dur?it.dur.toFixed(1)+'s':'▶'}</span>`:''}<div class="sc"><b></b><u></u></div></div><p>${esc(it.name)}</p><small>${esc(sub(it))}</small></div>`}
+ return `<div class="cd${V.sel.has(it.id)?' sel':''}" data-i="${i}"><div class="th" ${thumbStyle(it)}><span class="ck"></span>${pf&&!V.selm?`<span class="pfb">${esc(emo(pf[pf.length-1])[0]+' '+pf[1])}</span>`:''}${isV(it)?`<span class="vd">${pendOf(it.id)?'⏳ ':''}${v?(v[0]=='맞음'?'✓ ':'✕ '):''}${it.dur?it.dur.toFixed(1)+'s':'▶'}</span>`:''}${it.mo?`<span class="mob">✓ 추출완료 ${it.mo}</span>`:''}<div class="sc"><b></b><u></u></div></div><p>${esc(it.name)}</p><small>${esc(sub(it))}</small></div>`}
 function moreCards(){const g=$('#grid');if(!g)return;const L=V.list,n=Math.min(L.length,V.shown+cols()*12);if(n<=V.shown)return;const tmp=document.createElement('div');let h='';for(let i=V.shown;i<n;i++)h+=cardHTML(L[i],i);tmp.innerHTML=h;paintSheets(tmp);while(tmp.firstChild)g.appendChild(tmp.firstChild);V.shown=n}
 function toolbarHTML(targets){const p=pfInfo();if(!p)return '';const multi=V.selm,one=!multi&&targets[0];
  const btn=f=>{const [e,t]=emo(f.name);const on=one&&one.folders.includes(f.id);return `<i class="${on?'on':''}" data-pf="${f.id}"><em>${e}</em>${esc(t)}</i>`};
