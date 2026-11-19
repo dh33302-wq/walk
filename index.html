@@ -213,9 +213,12 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='pf_add'||a.type=='pf_remove')a.items.forEach(id=>{const it=D.by[id];if(!it)return;const has=it.folders.includes(a.folder);if(add&&!has)it.folders.push(a.folder);if(!add&&has)it.folders=it.folders.filter(x=>x!=a.folder)});
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
-// 새 버전이 받아지면 목록 화면에서 한 번 자동으로 다시 열기 (두 번 열 필요 없음)
-(async()=>{try{if(!('caches' in window))return;const hs=async()=>{const c=await caches.open('eg-shell-v2'),r=await c.match('./');if(!r)return '';const t=await r.text();let h=0;for(let i=0;i<t.length;i++)h=(Math.imul(h,31)+t.charCodeAt(i))>>>0;return t.length+'_'+h};
- const a=await hs();for(const ms of [2500,5000,9000]){await new Promise(r=>setTimeout(r,ms));const b=await hs();if(a&&b&&a!=b){if(sessionStorage.getItem('eg_upd')==b)return;if(V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&document.activeElement.id!='q'){sessionStorage.setItem('eg_upd',b);location.reload()}return}}}catch(e){}})();
+// 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
+const BUILD=18;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
+async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
+ const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
+setTimeout(checkUpd,1500);setInterval(checkUpd,300000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible')checkUpd()});
 // ---------- 요청 보내기 (5초 동안 되돌리기 가능) ----------
 let toastT=0;
 function act(a,label){a.id='m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);a.t=Date.now();applyLocal(a,1);count();PEND.push(a);LS.set('pend',PEND);render();
@@ -251,7 +254,7 @@ function pfInfo(){const root=D.folders.find(f=>!f.parent&&f.name.startsWith('�
 const emo=n=>{const m=n.match(/^(\p{Extended_Pictographic}️?)/u);return m?[m[1],n.slice(m[1].length).trim()]:['📁',n]};
 function sideHTML(cls){const row=(f,d)=>{const open=S.open[f.id],k=f.kids.length;return `<div class="it${S.folder==f.id?' on':''}" data-f="${f.id}" style="padding-left:${6+d*14}px"><span class="tw" data-tw="${f.id}">${k?(open?'⌄':'›'):''}</span><span class="nm">${esc(f.name)}</span><span class="c">${f.n||''}</span></div>`+(open?f.kids.map(x=>row(x,d+1)).join(''):'')};
  const need=D.items.filter(it=>it.tags.some(t=>t.includes(NEED))).length;
- return `<div class="side ${cls||''}"><div class="hd"><b>이글</b><span class="ib" data-a="side">‹</span></div>
+ return `<div class="side ${cls||''}"><div class="hd"><b>이글 <small style="color:var(--t2);font-size:11px;font-weight:400">v${BUILD}</small></b><span class="ib" data-a="side">‹</span></div>
  <div class="it${S.folder=='all'?' on':''}" data-f="all"><span class="tw">🗃️</span><span class="nm">전체</span><span class="c">${D.items.length.toLocaleString()}</span></div>
  <div class="it${S.folder=='recent'?' on':''}" data-f="recent"><span class="tw">🕘</span><span class="nm">최근 본 클립</span><span class="c">${S.recent.length||''}</span></div>
  <div class="it" data-a="stat"><span class="tw">📊</span><span class="nm">추출 현황</span></div>
