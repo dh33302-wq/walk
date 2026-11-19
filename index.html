@@ -135,7 +135,7 @@ const B={ids:{},tok:'',tokT:0,names:{},
  blob(kind,no){const key='b'+kind+no;if(this.names[key])return this.names[key];
   return this.names[key]=(async()=>{const nm=(kind=='thumbs'?'t':'s')+String(no).padStart(4,'0')+'.jpg';let c=null;try{c=await caches.open('eg-sheets')}catch(e){}
    const map=LS.get('sm_'+kind,{});if(c&&map[nm]){const r=await c.match('/s/'+map[nm]);if(r){if(this.ids[kind]&&this.tok)this.files(kind).catch(()=>{});return r.blob()}}
-   const k=(await this.files(kind))[nm];if(!k)throw new Error('묶음 없음');const blob=await this.get(k.split('_')[0]);
+   const k=(await this.files(kind))[nm];if(!k)throw new Error('묶음 없음');const blob=await this.get(k.slice(0,k.lastIndexOf('_')));
    if(c){try{if(map[nm])c.delete('/s/'+map[nm]);await c.put('/s/'+k,new Response(blob,{headers:{'Content-Type':'image/jpeg'}}));const m2=LS.get('sm_'+kind,{});m2[nm]=k;LS.set('sm_'+kind,m2)}catch(e){}}
    return blob})().catch(e=>{delete this.names[key];throw e})},
  sheet(kind,no){const key=kind+no;return this.names[key]||(this.names[key]=this.blob(kind,no).then(b=>URL.createObjectURL(b)).catch(e=>{delete this.names[key];throw e}))},
