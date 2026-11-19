@@ -29,7 +29,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .tags{display:flex;gap:6px;padding:8px 18px 10px;overflow-x:auto;white-space:nowrap;align-items:center;scrollbar-width:none}
 .tg{background:var(--s1);border-radius:14px;padding:5px 11px;font-size:13px;flex:none}.tg i{font-style:normal;color:var(--t2);margin-left:5px}.tg.on{background:var(--ac);color:#fff}.tg.on i{color:#e3eeff}
 .lbl{color:var(--t2);font-size:12px;flex:none}
-#grid{flex:1;overflow-y:auto;display:grid;gap:16px 10px;padding:0 14px 130px;align-content:start;touch-action:pan-y}
+#grid{flex:1;overflow-y:auto;overflow-x:hidden;display:grid;gap:16px 10px;padding:0 14px 130px;align-content:start;touch-action:pan-y}
 .th{width:100%;aspect-ratio:16/9;border-radius:16px;position:relative;overflow:hidden;background:#1a1a1d no-repeat}
 .cd p{margin:6px 4px 0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cd small{display:block;margin:0 4px;color:var(--t2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -41,7 +41,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .sc{position:absolute;inset:0;background:#141416 no-repeat;display:none}.sc b{position:absolute;left:8px;top:8px;background:#000b;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:400}
 .sc u{position:absolute;left:0;bottom:0;height:4px;background:#fff}
 .selh{display:flex;align-items:center;gap:10px;padding:8px 14px}.selh b{font-size:20px;flex:1}.txtb{color:var(--ac);padding:8px}
-.tb{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:2px;background:rgba(36,36,40,.97);border-radius:28px;padding:6px 8px;box-shadow:0 10px 30px #000c;z-index:15;white-space:nowrap;max-width:calc(100% - 12px);overflow-x:auto;scrollbar-width:none}
+.tb{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:2px;background:rgba(36,36,40,.66);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);touch-action:pan-x;transition:transform .45s cubic-bezier(.3,1.3,.45,1),opacity .25s;border-radius:28px;padding:6px 8px;box-shadow:0 10px 30px #000c;z-index:15;white-space:nowrap;max-width:calc(100% - 12px);overflow-x:auto;scrollbar-width:none}
 .tb .who{color:var(--ac);font-weight:600;padding:7px 12px;border-radius:20px;background:#ffffff0f;text-align:center}.tb .who small{display:block;color:var(--t2);font-weight:400;font-size:10px;line-height:1.1}
 .tb i{font-style:normal;display:flex;flex-direction:column;align-items:center;padding:5px 9px;border-radius:18px;font-size:11px;min-width:48px}
 .tb i em{font-style:normal;font-size:20px;line-height:1.15}.tb i.on{background:var(--ac);color:#fff}.tb i.mu{color:var(--t2)}.tb i.wait{outline:1px dashed #ffffff66}
@@ -77,7 +77,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .pgr{position:relative;flex:none;touch-action:pan-y;will-change:transform}
 .pgr .gh,.vid .ps{position:absolute;top:0;width:100%;height:100%;aspect-ratio:auto;border-radius:20px;opacity:.6;background-color:#0c0c0e}
 .pgr .gh.l{right:calc(100% + 14px)}.pgr .gh.r{left:calc(100% + 14px)}.vid .ps{left:0;border-radius:0}
-.drawer{touch-action:pan-y;will-change:transform;background:rgba(22,22,25,.72);backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);box-shadow:8px 0 40px #0009}.dim.dd{background:#0000004d}.cd{contain:layout style}
+.drawer{touch-action:pan-y;will-change:transform;background:rgba(22,22,25,.72);backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);box-shadow:8px 0 40px #0009}.dim.dd{background:#0000004d}.cd{contain:layout style;min-width:0}
 #grid,.side,.rail,#stat,.pop,.sug,#det{overscroll-behavior:contain}.strip,.tags,.ctl,.tb{overscroll-behavior-x:contain}
 .ib,.it,.tg,.tb i,.tb .who,.ctl b,.pop div,.sheet .bt b,.ri,.cd .th{transition:transform .42s cubic-bezier(.3,1.6,.45,1),background-color .2s,opacity .2s}
 .ib:active,.tb i:active,.tb .who:active,.ctl b:active,.tg:active,.sheet .bt b:active{transform:scale(.9);opacity:.75;transition-duration:.07s}
@@ -88,6 +88,9 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .vid video{opacity:0;transition:opacity .2s}.vid video.rdy{opacity:1}
 .vid .msg{width:26px;height:26px;padding:0;border-radius:50%;border:3px solid #ffffff30;border-top-color:#fff;animation:spin .8s linear infinite;opacity:0;transition:opacity .2s .35s}.vid .msg.on{opacity:1}
 .vid .msg.err{animation:none;border:0;width:auto;height:auto;padding:20px;opacity:1}
+.tb{bottom:calc(14px + env(safe-area-inset-bottom))}.tb.hide{transform:translate(-50%,calc(100% + 40px));opacity:0;pointer-events:none}.tb.drag{transition:none}
+.tbh{position:absolute;left:50%;bottom:0;width:120px;height:30px;margin-left:-60px;z-index:15;display:none;align-items:center;justify-content:center;touch-action:none}.tbh:after{content:'';width:46px;height:5px;border-radius:3px;background:#ffffff8c}.tb.hide+.tbh{display:flex}
+.th canvas.tc{position:absolute;left:0;top:0;width:100%;height:100%;animation:inF .18s}
 .sk{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:3;touch-action:none}.sk u{position:absolute;left:0;bottom:0;height:3px;width:0;background:#fff;opacity:.85;transition:height .15s}.sk.drag u{height:7px}
 .ps2{position:absolute;left:50%;top:50%;margin:-28px 0 0 -28px;width:56px;height:56px;border-radius:50%;background:#0008;z-index:3;display:none;align-items:center;justify-content:center;font-size:22px}.vid.paused .ps2{display:flex}
 #setup{max-width:420px;margin:0 auto;padding:16vh 22px 0;text-align:left}#setup img{width:76px;height:76px;border-radius:22px;display:block;margin-bottom:18px}#setup h1{font-size:24px;margin:0 0 6px;color:var(--t1)}
@@ -111,7 +114,7 @@ const LS={get(k,d){try{const v=localStorage.getItem('walk_'+k);return v==null?d:
 const B={ids:{},tok:'',tokT:0,names:{},
  run(fn){return new Promise((ok,no)=>google.script.run.withSuccessHandler(ok).withFailureHandler(no)[fn]())},
  async boot(){if(GAS){this.ids=await this.run('boot');this.tok=this.ids.token;this.tokT=Date.now()}else if(WEB){await this.bridge()}else{this.ids=await (await fetch('/boot')).json()}return this.ids},
- onMsg(d){if(d.boot){this.ids=d.boot;this.tok=d.boot.token;this.tokT=Date.now();this.need=false;const c=Object.assign({},d.boot);delete c.token;LS.set('ids',c)}
+ onMsg(d){if(d.boot){this.ids=d.boot;this.tok=d.boot.token;this.tokT=Date.now();this.need=false;const c=Object.assign({},d.boot);delete c.token;LS.set('ids',c);LS.set('tk',{t:this.tok,at:this.tokT})}
   const w=this._w;this._w=null;if(this._pw){try{this._pw.close()}catch(e){}this._pw=null}if(w){if(d.error)w.no(new Error(d.error));else w.ok(d.boot)}else if(d.boot&&window.onBridge)window.onBridge()},
  bridge(){if(this._bp)return this._bp;const p=new Promise((ok,no)=>{const url=gasUrl();if(!okUrl(url))return no(new Error('NOURL'));this._w={ok,no};
    let f=document.getElementById('brg');if(f)f.remove();f=document.createElement('iframe');f.id='brg';f.setAttribute('aria-hidden','true');f.style.cssText='position:fixed;left:-9px;top:-9px;width:1px;height:1px;border:0;opacity:0;pointer-events:none';
@@ -119,34 +122,50 @@ const B={ids:{},tok:'',tokT:0,names:{},
    setTimeout(()=>{if(this._w&&this._w.ok===ok){this._w=null;this.need=true;no(new Error('BRIDGE'))}},15000)});
   this._bp=p;const clr=()=>{if(this._bp===p)this._bp=null};p.then(clr,clr);return p},
  connect(){const url=gasUrl();this._pw=window.open(url+(url.includes('?')?'&':'?')+'bridge=1&pop=1','_blank')},
- async token(){if(GAS&&Date.now()-this.tokT>40*60e3){this.tok=await this.run('token');this.tokT=Date.now()}if(WEB&&(!this.tok||Date.now()-this.tokT>40*60e3))await this.bridge();return this.tok},
- async get(id,type){const u=DRV?'https://www.googleapis.com/drive/v3/files/'+id+'?alt=media':'/file/'+encodeURIComponent(id);
-  const r=await fetch(u,DRV?{headers:{Authorization:'Bearer '+await this.token()}}:{cache:'no-store'});if(!r.ok)throw new Error('드라이브 응답 '+r.status);return type=='json'?r.json():r.blob()},
+ async token(){if(GAS&&Date.now()-this.tokT>40*60e3){this.tok=await this.run('token');this.tokT=Date.now()}if(WEB&&(!this.tok||Date.now()-this.tokT>45*60e3))await this.bridge();return this.tok},
+ async fx(u,o){o=o||{};const go=async()=>fetch(u,Object.assign({},o,{headers:Object.assign({},o.headers||{},{Authorization:'Bearer '+await this.token()})}));
+  let r=await go();if(r.status==401&&WEB){this.tok='';await this.bridge();r=await go()}return r},
+ async get(id,type){const r=DRV?await this.fx('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media'):await fetch('/file/'+encodeURIComponent(id),{cache:'no-store'});if(!r.ok)throw new Error('드라이브 응답 '+r.status);return type=='json'?r.json():r.blob()},
  async list(folder,q){let out=[],pt='';do{const u=DRV?'https://www.googleapis.com/drive/v3/files?pageSize=1000&fields=nextPageToken,files(id,name,modifiedTime)&q='+encodeURIComponent("'"+folder+"' in parents and trashed=false"+(q?' and '+q:''))+(pt?'&pageToken='+pt:''):'/list/'+encodeURIComponent(folder)+'?q='+encodeURIComponent(q||'');
-  const r=await fetch(u,DRV?{headers:{Authorization:'Bearer '+await this.token()}}:{});if(!r.ok)throw new Error('드라이브 목록 '+r.status);const j=await r.json();out=out.concat(j.files||[]);pt=j.nextPageToken||''}while(pt);return out},
+  const r=DRV?await this.fx(u):await fetch(u);if(!r.ok)throw new Error('드라이브 목록 '+r.status);const j=await r.json();out=out.concat(j.files||[]);pt=j.nextPageToken||''}while(pt);return out},
+ async byName(n){if(!DRV)return [];const q="name='"+n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+"' and trashed=false";
+  const r=await this.fx('https://www.googleapis.com/drive/v3/files?pageSize=100&fields=files(id,name,parents)&q='+encodeURIComponent(q));if(!r.ok)return [];return (await r.json()).files||[]},
  files(kind){if(!this.names[kind])this.names[kind]=this.list(this.ids[kind]).then(fs=>{const m=Object.fromEntries(fs.map(f=>[f.name,f.id+'_'+(f.modifiedTime||'')]));
-   const old=LS.get('sm_'+kind,{});let ch=0;for(const k in old)if(old[k]!=m[k]){delete old[k];delete this.names[kind+parseInt(k.slice(1),10)];ch++}if(ch)LS.set('sm_'+kind,old);return m}).catch(e=>{delete this.names[kind];throw e});return this.names[kind]},
- async sheet(kind,no){const key=kind+no;if(this.names[key])return this.names[key];
+   const old=LS.get('sm_'+kind,{});let ch=0;for(const k in old)if(old[k]!=m[k]){const no=parseInt(k.slice(1),10);delete old[k];delete this.names[kind+no];delete this.names['b'+kind+no];this.bm.delete(kind+no);ch++}if(ch)LS.set('sm_'+kind,old);return m}).catch(e=>{delete this.names[kind];throw e});return this.names[kind]},
+ blob(kind,no){const key='b'+kind+no;if(this.names[key])return this.names[key];
   return this.names[key]=(async()=>{const nm=(kind=='thumbs'?'t':'s')+String(no).padStart(4,'0')+'.jpg';let c=null;try{c=await caches.open('eg-sheets')}catch(e){}
-   const map=LS.get('sm_'+kind,{});if(c&&map[nm]){const r=await c.match('/s/'+map[nm]);if(r){if(this.ids[kind])this.files(kind).catch(()=>{});return URL.createObjectURL(await r.blob())}}
+   const map=LS.get('sm_'+kind,{});if(c&&map[nm]){const r=await c.match('/s/'+map[nm]);if(r){if(this.ids[kind]&&this.tok)this.files(kind).catch(()=>{});return r.blob()}}
    const k=(await this.files(kind))[nm];if(!k)throw new Error('묶음 없음');const blob=await this.get(k.split('_')[0]);
    if(c){try{if(map[nm])c.delete('/s/'+map[nm]);await c.put('/s/'+k,new Response(blob,{headers:{'Content-Type':'image/jpeg'}}));const m2=LS.get('sm_'+kind,{});m2[nm]=k;LS.set('sm_'+kind,m2)}catch(e){}}
-   return URL.createObjectURL(blob)})().catch(e=>{delete this.names[key];throw e})},
+   return blob})().catch(e=>{delete this.names[key];throw e})},
+ sheet(kind,no){const key=kind+no;return this.names[key]||(this.names[key]=this.blob(kind,no).then(b=>URL.createObjectURL(b)).catch(e=>{delete this.names[key];throw e}))},
+ bm:new Map(),
+ bitmap(kind,no){const k=kind+no;let p=this.bm.get(k);if(p){this.bm.delete(k);this.bm.set(k,p);return p}
+  p=this.blob(kind,no).then(b=>createImageBitmap(b));this.bm.set(k,p);p.catch(()=>this.bm.delete(k));while(this.bm.size>5)this.bm.delete(this.bm.keys().next().value);return p},
+ async preload(){if(this._pre)return;this._pre=1;try{const c=D.cfg.thumb,n=Math.ceil((Math.max(-1,...D.items.map(it=>it.thumb))+1)/c.per);let i=0;
+   const run=async()=>{while(i<n){const k=i++;try{await this.blob('thumbs',k)}catch(e){}}};await Promise.all([run(),run(),run()])}catch(e){}},
  mc:new Map(),
  media(it){const hit=this.mc.get(it.id);if(hit){this.mc.delete(it.id);this.mc.set(it.id,hit);return hit}
   const p=this.media0(it);this.mc.set(it.id,p);p.catch(()=>this.mc.delete(it.id));
   while(this.mc.size>7){const [k,v]=this.mc.entries().next().value;this.mc.delete(k);v.then(u=>URL.revokeObjectURL(u)).catch(()=>{})}return p},
- async media0(it){if(!this.ids.images)throw new Error('드라이브에 Walk.library 가 아직 없습니다');
-  const fo=await this.list(this.ids.images,"name='"+it.id+".info'");if(!fo.length)throw new Error('이 항목은 아직 드라이브에 올라가지 않았습니다');
-  const fs=await this.list(fo[0].id);const f=fs.find(f=>f.name==it.name+'.'+it.ext)||fs.find(f=>f.name.toLowerCase().endsWith('.'+it.ext)&&!/_thumbnail/.test(f.name));
-  if(!f)throw new Error('영상 파일이 아직 드라이브에 없습니다');return URL.createObjectURL(await this.get(f.id))},
+ async media0(it){let c=null;try{c=await caches.open('eg-media')}catch(e){}const ck='/m/'+it.id+'_'+(it.dur||0);
+  if(c){const r=await c.match(ck);if(r)return URL.createObjectURL(await r.blob())}
+  if(!this.ids.images)throw new Error('드라이브에 Walk.library 가 아직 없습니다');const fn=it.name+'.'+it.ext;
+  const [fo,cand]=await Promise.all([this.list(this.ids.images,"name='"+it.id+".info'"),this.byName(fn).catch(()=>[])]);
+  if(!fo.length)throw new Error('이 항목은 아직 드라이브에 올라가지 않았습니다');
+  let f=cand.find(x=>(x.parents||[]).includes(fo[0].id));
+  if(!f){const fs=await this.list(fo[0].id);f=fs.find(f=>f.name==fn)||fs.find(f=>f.name.toLowerCase().endsWith('.'+it.ext)&&!/_thumbnail/.test(f.name))}
+  if(!f)throw new Error('영상 파일이 아직 드라이브에 없습니다');const blob=await this.get(f.id);
+  if(c){try{await c.put(ck,new Response(blob,{headers:{'Content-Type':blob.type||'video/mp4'}}));const ks=await c.keys();for(let i=0;i<ks.length-150;i++)c.delete(ks[i])}catch(e){}}
+  return URL.createObjectURL(blob)},
  async send(a){const body=JSON.stringify(a);if(!DRV){const r=await fetch('/inbox/'+a.id,{method:'POST',body});if(!r.ok)throw new Error('전송 실패');return}
   const bd='x'+Date.now(),m='--'+bd+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify({name:a.id+'.json',parents:[this.ids.inbox]})+'\r\n--'+bd+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+bd+'--';
-  const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+await this.token(),'Content-Type':'multipart/related; boundary='+bd},body:m});
+  const r=await this.fx('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+bd},body:m});
   if(!r.ok)throw new Error('드라이브 저장 실패 '+r.status)}};
 // ---------- 상태 ----------
 const D={items:[],by:{},tags:[],folders:[],fby:{},status:null,time:0};
-const S=Object.assign({folder:'all',tags:[],not:[],mode:'and',text:'',sort:'name',dir:1,cols:0,pfc:'',pfs:'ref',open:{},side:true,recent:[],saved:[]},LS.get('state',{}));
+const S=Object.assign({folder:'all',tags:[],not:[],mode:'and',text:'',sort:'added',dir:-1,cols:0,pfc:'',pfs:'ref',open:{},side:true,recent:[],saved:[]},LS.get('state',{}));
+if(!LS.get('sortv2',0)){S.sort='added';S.dir=-1;LS.set('sortv2',1);LS.set('state',S)}
 let V={view:'grid',list:[],cur:-1,sel:new Set(),selm:false,pop:'',shown:0,drawer:false,ab:null,rate:1,flip:false};
 let PEND=LS.get('pend',[]);            // 아직 PC가 반영하지 않은 요청
 const save=()=>LS.set('state',S),VIDEO=['mp4','webm','mov','m4v'],isV=it=>VIDEO.includes(it.ext);
@@ -186,8 +205,15 @@ function tagCounts(L,max){const c=new Map();L.forEach(it=>it.tags.forEach(t=>c.s
 // ---------- 화면 ----------
 const W=()=>innerWidth,narrow=()=>W()<520,port=()=>innerHeight>W();
 const cols=()=>S.cols||(narrow()?2:port()?3:4);
-function thumbStyle(it){if(it.thumb<0)return '';const c=D.cfg.thumb,p=it.thumb%c.per;return `data-sheet="${Math.floor(it.thumb/c.per)}" style="background-size:${c.cols*100}%;background-position:${(p%c.cols)/(c.cols-1)*100}% ${Math.floor(p/c.cols)/(c.per/c.cols-1)*100}%"`}
-function paintSheets(root){root.querySelectorAll('[data-sheet]').forEach(el=>{const n=el.dataset.sheet;el.removeAttribute('data-sheet');B.sheet('thumbs',n).then(u=>el.style.backgroundImage='url('+u+')').catch(()=>{})})}
+function thumbStyle(it){if(it.thumb<0)return '';const c=D.cfg.thumb;return `data-sheet="${Math.floor(it.thumb/c.per)}" data-p="${it.thumb%c.per}"`}
+// 썸네일: 큰 묶음 그림을 통째로 깔지 않고, 화면 근처 카드만 작은 그림으로 잘라 그림(메모리·속도)
+const IOS=new Map();
+function ioFor(root){for(const [k,v] of IOS)if(k&&!k.isConnected){v.disconnect();IOS.delete(k)}let o=IOS.get(root);if(o)return o;
+ o=new IntersectionObserver(es=>{for(const e of es){const el=e.target;if(!el.isConnected){o.unobserve(el);continue}if(e.isIntersecting)drawThumb(el);else if(el._cv){el._cv.width=0;el._cv.remove();el._cv=null}}},{root:root||null,rootMargin:'900px 300px'});IOS.set(root,o);return o}
+function paintSheets(root){root.querySelectorAll('[data-sheet]').forEach(el=>{if(el._io)return;el._io=1;if('IntersectionObserver' in window)ioFor(el.closest('#grid')).observe(el);else drawThumb(el)})}
+async function drawThumb(el){if(el._cv||el._dr)return;el._dr=1;try{const p=+el.dataset.p,c=D.cfg.thumb,bm=await B.bitmap('thumbs',+el.dataset.sheet);if(!el.isConnected)return;
+  const tw=bm.width/c.cols,th=bm.height/(c.per/c.cols),cv=document.createElement('canvas');cv.width=Math.round(tw);cv.height=Math.round(th);cv.className='tc';
+  cv.getContext('2d').drawImage(bm,(p%c.cols)*tw,Math.floor(p/c.cols)*th,tw,th,0,0,cv.width,cv.height);el.insertBefore(cv,el.firstChild);el._cv=cv}catch(e){}finally{el._dr=0}}
 function pfInfo(){const root=D.folders.find(f=>!f.parent&&f.name.startsWith('🎨'));if(!root)return null;const chars=root.kids;const ch=chars.find(c=>c.id==S.pfc)||chars[0];if(!ch)return null;
  const sec=k=>ch.kids.find(f=>f.name.startsWith(k));const cur=S.pfs=='work'?sec('🛠'):sec('📚');return {root,chars,ch,ref:sec('📚'),work:sec('🛠'),cand:sec('🗳'),fin:sec('🏆'),cur,mot:cur?cur.kids:[]}}
 const emo=n=>{const m=n.match(/^(\p{Extended_Pictographic}️?)/u);return m?[m[1],n.slice(m[1].length).trim()]:['📁',n]};
@@ -215,7 +241,7 @@ function moreCards(){const g=$('#grid');if(!g)return;const L=V.list,n=Math.min(L
 function toolbarHTML(targets){const p=pfInfo();if(!p)return '';const multi=V.selm,one=!multi&&targets[0];
  const btn=f=>{const [e,t]=emo(f.name);const on=one&&one.folders.includes(f.id);return `<i class="${on?'on':''}" data-pf="${f.id}"><em>${e}</em>${esc(t)}</i>`};
  const img=one&&!isV(one);
- return `<div class="tb"><span class="who" data-a="who">${esc(p.ch.name)} ▾<small>${S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스'}${multi?' · '+V.sel.size+'개':''}</small></span><span class="vs"></span>${p.mot.map(btn).join('')}${p.cand?btn(p.cand):''}<span class="vs"></span><i class="mu" data-a="rv"><em>✓</em>검수</i>${img?`<i class="mu" data-a="ext"><em>🎯</em>추출</i>`:''}</div>`}
+ return `<div class="tb${S.tbHide?' hide':''}"><span class="who" data-a="who">${esc(p.ch.name)} ▾<small>${S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스'}${multi?' · '+V.sel.size+'개':''}</small></span><span class="vs"></span>${p.mot.map(btn).join('')}${p.cand?btn(p.cand):''}<span class="vs"></span><i class="mu" data-a="rv"><em>✓</em>검수</i>${img?`<i class="mu" data-a="ext"><em>🎯</em>추출</i>`:''}</div><div class="tbh" data-a="tbshow"></div>`}
 function popHTML(targets){const p=pfInfo();if(V.pop=='rv'){const cur=targets.length==1&&D.verify[targets[0].id];return `<div class="pop"><h6>검수 ${targets.length>1?targets.length+'개':''}</h6><div class="ok${cur&&cur[0]=='맞음'?' on':''}" data-v="맞음">✓ 맞음 — 게임과 같음</div>${['무기','외형','모션','태그'].map(x=>`<div class="ng${cur&&cur[1]==x?' on':''}" data-v="틀림" data-r="${x}">✕ ${x}</div>`).join('')}<input id="rvx" placeholder="기타 — 직접 입력 후 Enter"></div>`}
  if(V.pop=='who'&&p)return `<div class="pop l"><h6>넣을 곳</h6><div class="${S.pfs=='ref'?'on':''}" data-pfs="ref">📚 레퍼런스</div><div class="${S.pfs=='work'?'on':''}" data-pfs="work">🛠️ 작업</div><h6>캐릭터</h6>${p.chars.map(c=>`<div class="${c.id==p.ch.id?'on':''}" data-pfc="${c.id}">${esc(c.name)}<span style="margin-left:auto;color:var(--t2)">${c.n||''}</span></div>`).join('')}</div>`;
  if(V.pop=='sort')return `<div class="pop" style="bottom:auto;top:56px"><h6>정렬</h6>${[['name','이름'],['added','추가한 날'],['dur','길이'],['game','게임']].map(([k,l])=>`<div class="${S.sort==k?'on':''}" data-sort="${k}">${l}${S.sort==k?(S.dir>0?' ↑':' ↓'):''}</div>`).join('')}<h6>한 줄에</h6><div>${[1,2,3,4].map(n=>`<span class="tg${cols()==n?' on':''}" data-cols="${n}">${n}</span>`).join(' ')}</div></div>`;
@@ -223,13 +249,13 @@ function popHTML(targets){const p=pfInfo();if(V.pop=='rv'){const cur=targets.len
 function render(){const app=$('#app');if(!D.cfg)return;const y=$('#grid')?$('#grid').scrollTop:0,keep=V.view=='grid'&&V._kept;
  const showSide=false;let h='';
  if(V.view=='detail'){h=detailHTML()}
- else{const L=compute();h=(showSide?sideHTML():'')+`<div class="main${V.selm?' selm':''}"><div id="top">${topHTML()}</div>${V.selm?'':headHTML(L)}<div id="grid" style="grid-template-columns:repeat(${cols()},1fr)"></div>${V.selm?toolbarHTML([...V.sel].map(id=>D.by[id]))+popHTML([...V.sel].map(id=>D.by[id])):popHTML([])}</div>`;
+ else{const L=compute();h=(showSide?sideHTML():'')+`<div class="main${V.selm?' selm':''}"><div id="top">${topHTML()}</div>${V.selm?'':headHTML(L)}<div id="grid" style="grid-template-columns:repeat(${cols()},minmax(0,1fr))"></div>${V.selm?toolbarHTML([...V.sel].map(id=>D.by[id]))+popHTML([...V.sel].map(id=>D.by[id])):popHTML([])}</div>`;
   if(V.drawer)h+='<div class="dim dd" data-a="menux"></div>'+sideHTML('drawer')}
  app.innerHTML=h;const was=render._w||{};render._w={view:V.view,drawer:!!V.drawer,pop:V.pop};
  if(V.drawer&&!was.drawer)app.querySelectorAll('.drawer,.dim').forEach(e=>e.classList.add('in'));
  if(V.pop&&V.pop!==was.pop){const pe=app.querySelector('.pop');if(pe)pe.classList.add('in')}
  if(was.view&&was.view!==V.view){const m=app.querySelector(V.view=='detail'?'#det':'.main');if(m){if(V.view=='detail'&&V._org)m.style.transformOrigin=V._org[0]+'px '+V._org[1]+'px';m.classList.add('in')}}
- bindDrawer();if(V.view=='grid'){const want=keep?V._kept:0;V.shown=0;do{moreCards()}while(V.shown<Math.min(V.list.length,want));$('#grid').scrollTop=keep?y:0;$('#grid').onscroll=e=>{if(e.target.scrollTop+e.target.clientHeight>e.target.scrollHeight-Math.max(1600,e.target.clientHeight*3))moreCards()};V._kept=V.shown;bindGrid()}
+ bindDrawer();bindBar();if(V.view=='grid'){const want=keep?V._kept:0;V.shown=0;do{moreCards()}while(V.shown<Math.min(V.list.length,want));$('#grid').scrollTop=keep?y:0;$('#grid').onscroll=e=>{if(e.target.scrollTop+e.target.clientHeight>e.target.scrollHeight-Math.max(1600,e.target.clientHeight*3))moreCards()};V._kept=V.shown;bindGrid()}
  else bindDetail();if(V.stat)statView()}
 function renderTop(){const t=$('#top');if(t&&!V.selm&&document.activeElement!==$('#q'))t.innerHTML=topHTML()}
 // ---------- 상세 ----------
@@ -242,7 +268,7 @@ function detailHTML(){const it=V.list[V.cur],wide=!narrow()&&!port();const fps=i
  <div class="dt"><h2>${esc(it.name)}</h2><p>${esc(sub(it))}${it.dur?' · '+(fps?Math.round(it.dur*fps)+'f @ '+fps+'fps':it.dur.toFixed(2)+'초'):''}${pendOf(it.id)?' · ⏳ PC 반영 대기':''}</p></div>
  <div class="dtags">${it.tags.map(t=>`<span class="tg" data-at="${esc(t)}">${esc(t)}</span>`).join('')}</div>${it.ann?`<div class="ann">${esc(it.ann)}</div>`:''}
  <div id="memo"></div><div class="lbl" style="margin:8px 4px">${it.folders.map(f=>esc(path(f).join(' › '))).join('<br>')}</div>
- ${wide?'':`<div class="lbl" style="margin:10px 2px 8px">같은 목록 ${V.list.length}개</div><div class="strip">${rail}</div>`}${toolbarHTML([it])}${popHTML([it])}</div>${wide?`<div class="rail"><h5>같은 목록 ${V.list.length}개</h5>${rail}</div>`:''}`}
+ ${wide?'':`<div class="lbl" style="margin:10px 2px 8px">같은 목록 ${V.list.length}개</div><div class="strip">${rail}</div>`}</div>${wide?`<div class="rail"><h5>같은 목록 ${V.list.length}개</h5>${rail}</div>`:''}${toolbarHTML([it])}${popHTML([it])}`}
 function bindDetail(){paintSheets($('#app'));const it=V.list[V.cur],box=$('#vid');
  const msg=box.querySelector('.msg');msg.textContent='';requestAnimationFrame(()=>msg.classList.add('on'));
  const show=url=>{if(V.list[V.cur]!==it||!$('#vid')||$('#vid')!==box)return;if(isV(it)){const v=document.createElement('video');v.loop=true;v.muted=true;v.autoplay=true;v.playsInline=true;v.controls=false;v.disablePictureInPicture=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.playbackRate=V.rate;
@@ -276,6 +302,13 @@ function bindDetail(){paintSheets($('#app'));const it=V.list[V.cur],box=$('#vid'
    pg.addEventListener('transitionend',fin,{once:true});setTimeout(fin,ms+80)}
   else setX(0,420,SPRING)};
  pg.addEventListener('touchend',e=>end(false,e.timeStamp),{passive:true});pg.addEventListener('touchcancel',e=>end(true,e.timeStamp),{passive:true})}
+// 도구막대: 아래로 밀면 숨김, 손잡이를 위로 밀거나 누르면 다시 나옴
+function bindBar(){const tb=$('.tb'),hd=$('.tbh');if(!tb)return;let p=null;const set=h=>{S.tbHide=h;save();tb.classList.remove('drag');tb.style.transform='';tb.style.opacity='';tb.classList.toggle('hide',h);tick(6)};
+ tb.addEventListener('touchstart',e=>{const t=e.touches[0];p={x:t.clientX,y:t.clientY,lock:'',dy:0,t:e.timeStamp}},{passive:true});
+ tb.addEventListener('touchmove',e=>{if(!p)return;const t=e.touches[0],dx=t.clientX-p.x,dy=t.clientY-p.y;if(!p.lock){if(Math.abs(dx)<6&&Math.abs(dy)<6)return;p.lock=Math.abs(dy)>Math.abs(dx)?'v':'h'}
+  if(p.lock!='v')return;p.dy=dy>0?dy:dy*0.25;tb.classList.add('drag');tb.style.transform='translate(-50%,'+p.dy+'px)';tb.style.opacity=String(Math.max(.3,1-p.dy/160))},{passive:true});
+ const end=e=>{if(!p)return;const q=p;p=null;if(q.lock!='v')return;const v=q.dy/Math.max(1,e.timeStamp-q.t);set(q.dy>34||(v>0.35&&q.dy>8))};tb.addEventListener('touchend',end,{passive:true});tb.addEventListener('touchcancel',end,{passive:true});
+ if(hd){let y0=0;hd.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});hd.addEventListener('touchmove',e=>{if(y0-e.touches[0].clientY>10&&S.tbHide)set(false)},{passive:true})}}
 // 서랍(폴더 목록): 왼쪽으로 밀면 손가락을 따라 닫힘
 function bindDrawer(){const dr=$('.drawer'),dm=$('.dim');if(!dr)return;let p=null;const w=()=>dr.offsetWidth;
  const setX=(x,ms)=>{const tr=ms?ms+'ms cubic-bezier(.22,1,.36,1)':'';dr.style.transition=ms?'transform '+tr:'none';dr.style.transform=x?'translate3d('+x+'px,0,0)':'';if(dm){dm.style.transition=ms?'opacity '+tr:'none';dm.style.opacity=String(Math.max(0,1+x/w()))}};
@@ -346,6 +379,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  if(a=='selx'){V.selm=false;V.sel.clear();return render()}if(a=='selall'){V.list.forEach(it=>V.sel.add(it.id));return render()}if(a=='selinv'){const n=new Set();V.list.forEach(it=>{if(!V.sel.has(it.id))n.add(it.id)});V.sel=n;return render()}
  if(a=='close'){return closeDetail()}
  if(a=='conn'){B.connect();return}
+ if(a=='tbshow'){S.tbHide=false;save();const tb=$('.tb');if(tb)tb.classList.remove('hide');tick(6);return}
  if(a=='savesearch'){S.saved.push({name:S.tags.concat(S.not.map(t=>'−'+t),S.text?[S.text]:[]).join(' + '),tags:S.tags.slice(),not:S.not.slice(),mode:S.mode,text:S.text});save();return render()}
  if(a=='ext'){const it=targets[0],q=(D.status&&D.status.queue||[]).filter(r=>r['상태']=='요청').length;const s=document.createElement('div');s.innerHTML=`<div class="dim in"></div><div class="sheet in"><h3>모션 추출을 요청할까요?</h3><p>${esc(it.name)} · ${esc(gameOf(it))}<br>무인 작업이 지금 하던 캐릭터를 끝낸 뒤 이 캐릭터를 먼저 처리합니다. 지금 대기 중인 요청 ${q}건.</p><div class="bt"><b data-n>취소</b><b class="go" data-y>요청</b></div></div>`;$('#app').appendChild(s);
    s.onclick=ev=>{if(ev.target.closest('[data-y]'))act({type:'extract',item:it.id},'추출 요청: '+it.name);if(ev.target.closest('[data-y],[data-n],.dim'))s.remove();ev.stopPropagation()};return}
@@ -379,7 +413,7 @@ async function refresh(first){try{const st=await B.get(B.ids.status,'json');cons
   if(first||(newer&&st.scan_time&&st.scan_time*1>D.time-600&&quiet)){const ix=await B.get(B.ids.index,'json');if(!D.cfg||ix.time!=D.time){if(WEB)CS.put('index',ix);
     if(!D.cfg||quiet){ingest(ix);V._kept=V.shown;render()}else D.next=ix}}
   if(D.next&&quiet){ingest(D.next);D.next=null;V._kept=V.shown;render()}
-  renderTop();if(V.stat)statView()}catch(e){if(first)throw e}flush()}
+  renderTop();if(V.stat)statView();if(WEB)setTimeout(()=>B.preload(),1500)}catch(e){if(first)throw e}flush()}
 function setupView(msg){$('#app').innerHTML=`<div id="load" style="display:block"><div id="setup"><img src="icon-192.png" alt=""><h1>이글 연결</h1><p>처음 한 번만 Apps Script 웹 앱 주소를 붙여 넣습니다. 주소는 이 폰에만 저장됩니다.</p><input id="gu" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off"><button id="gb">저장하고 시작</button><p class="bad" style="margin-top:10px">${esc(msg||'')}</p></div></div>`;
  $('#gu').value=gasUrl();$('#gb').onclick=()=>{const v=$('#gu').value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec/.test(v))return setupView('script.google.com 으로 시작해 /exec 로 끝나는 주소를 넣어 주세요.');try{localStorage.setItem('walk_gas_url',v)}catch(e){}location.reload()}}
 window.onBridge=()=>{renderTop();refresh(!D.cfg).catch(()=>{})};
@@ -389,8 +423,8 @@ addEventListener('message',e=>{const d=e.data;if(!d||d.walkBridge!==1)return;if(
   if(WEB){if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
    if(/[?&]reset\b/.test(location.search)){try{localStorage.removeItem('walk_gas_url')}catch(e){}}
    if(!okUrl(gasUrl()))return setupView('');
-   B.ids=LS.get('ids',{});D.status=LS.get('status',null);const ix=await CS.get('index');if(ix){ingest(ix);render()}      // 저장본으로 즉시 표시
-   const live=async()=>{try{await B.boot();if(!B.ids.index||!B.ids.status){if(!D.cfg)$('#load').innerHTML='<div style="padding:30px">드라이브에서 목록을 찾지 못했습니다.<br>'+esc((B.ids.problems||[]).join(' / '))+'</div>';return}await refresh(true)}
+   B.ids=LS.get('ids',{});D.status=LS.get('status',null);const tk=LS.get('tk',null);if(tk&&tk.t&&Date.now()-tk.at<45*60e3&&B.ids.index){B.tok=tk.t;B.tokT=tk.at}const ix=await CS.get('index');if(ix){ingest(ix);render()}      // 저장본으로 즉시 표시
+   const live=async()=>{try{if(!(B.tok&&B.ids.index&&B.ids.status))await B.boot();if(!B.ids.index||!B.ids.status){if(!D.cfg)$('#load').innerHTML='<div style="padding:30px">드라이브에서 목록을 찾지 못했습니다.<br>'+esc((B.ids.problems||[]).join(' / '))+'</div>';return}await refresh(true)}
     catch(e){const m=String(e.message||e);if(m=='BRIDGE'||m=='NOURL'){B.need=true;if(D.cfg)renderTop();else{$('#load').innerHTML='<div id="setup" style="padding-top:22vh"><img src="icon-192.png" alt=""><h1>구글 연결이 필요합니다</h1><p>아래 버튼을 누르면 연결 창이 잠깐 열렸다 닫힙니다.</p><button id="gb">구글 연결</button></div>';$('#gb').onclick=()=>B.connect()}}
      else if(!D.cfg)$('#load').innerHTML='<div style="padding:30px">불러오지 못했습니다: '+esc(m)+'</div>'}};
    live();setInterval(()=>{if(B.tok)refresh(false);else if(!B.need)live()},60000);
