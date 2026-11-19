@@ -215,7 +215,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=19;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=20;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -514,7 +514,8 @@ function setupView(msg){$('#app').innerHTML=`<div id="load" style="display:block
  $('#gu').value=gasUrl();$('#gb').onclick=()=>{const v=$('#gu').value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec/.test(v))return setupView('script.google.com 으로 시작해 /exec 로 끝나는 주소를 넣어 주세요.');try{localStorage.setItem('walk_gas_url',v)}catch(e){}location.reload()}}
 window.onBridge=()=>{renderTop();refresh(!D.cfg).catch(()=>{})};
 addEventListener('message',e=>{const d=e.data;if(!d||d.walkBridge!==1)return;if(!TESTB&&!/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(e.origin)&&e.origin!=='https://script.google.com')return;B.onMsg(d)});
-(async()=>{addEventListener('resize',()=>{if(D.cfg){V._kept=V.shown;render()}});
+(async()=>{// 폭이 바뀔 때만 다시 그림 — 키보드가 올라와 높이만 바뀌면 그리지 않음(검색칸 포커스 유지)
+let _rw=innerWidth,_rt=0;addEventListener('resize',()=>{clearTimeout(_rt);_rt=setTimeout(()=>{if(!D.cfg||Math.abs(innerWidth-_rw)<2)return;_rw=innerWidth;const q=$('#q'),f=q&&document.activeElement===q,ss=f?q.selectionStart:0,vv=f?q.value:'';V._kept=V.shown;render();if(f){const n=$('#q');if(n){n.value=vv;n.focus();try{n.setSelectionRange(ss,ss)}catch(e){}}}},120)});
  try{
   if(WEB){if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
    if(/[?&]reset\b/.test(location.search)){try{localStorage.removeItem('walk_gas_url')}catch(e){}}
