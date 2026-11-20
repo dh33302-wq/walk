@@ -217,7 +217,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=22;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=23;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -513,7 +513,10 @@ function statView(){const st=D.status;const old=$('#stat');const y0=old?old.scro
   if(pend||fail.length||rq.length)h+=`<div class="card"><h4>내 요청</h4>${pend?`<div class="row"><b>PC 반영 대기</b><span>${pend}건${PEND.some(a=>a.err)?' · 전송 실패 있음':''}</span></div>`:''}${fail.map(f=>`<div class="row"><b class="bad">반영 실패</b><span>${esc(f.msg)}</span></div>`).join('')}${rq.map(r=>`<div class="row"><b>🎯 ${esc(r['이름'])}</b><span>${esc(r['게임'])} · ${esc(r['시각'].slice(5,16))}</span></div>`).join('')}</div>`}
  el.innerHTML=h;$('#app').appendChild(el);el.scrollTop=y0}
 // ---------- 시작·주기 갱신 ----------
-async function refresh(first){try{const st=await B.get(B.ids.status,'json');const newer=!D.status||st.time!=D.status.time;D.status=st;D.live=true;if(WEB)LS.set('status',st);
+// 현황: 드라이브 PC 앱이 올린 status.json 과 중계로 바로 올라온 status_live.json 중 새것
+async function liveStatus(st){try{if(!DRV)return st;if(B.liveId===undefined||(!B.liveId&&Date.now()-(B.liveT||0)>120e3)){B.liveT=Date.now();const f=await B.byName('status_live.json');B.liveId=((f.find(x=>(x.parents||[]).includes(B.ids.root))||f[0])||{}).id||''}
+ if(B.liveId){const l=await B.get(B.liveId,'json');if(l&&l.time>(st.time||0))return l}}catch(e){B.liveId=undefined}return st}
+async function refresh(first){try{const st=await liveStatus(await B.get(B.ids.status,'json'));const newer=!D.status||st.time!=D.status.time;D.status=st;D.live=true;if(WEB)LS.set('status',st);
   const quiet=V.view=='grid'&&!V.selm&&!V.pop&&document.activeElement!==$('#q');
   if(first||(newer&&st.scan_time&&st.scan_time*1>D.time-600&&quiet)){const ix=await B.get(B.ids.index,'json');if(!D.cfg||ix.time!=D.time){if(WEB)CS.put('index',ix);
     if(!D.cfg||quiet){ingest(ix);V._kept=V.shown;render()}else D.next=ix}}
