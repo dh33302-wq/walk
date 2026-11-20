@@ -92,6 +92,12 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .ri{padding:4px;border-radius:16px;margin-bottom:8px}.ri.cur{background:var(--s1);box-shadow:0 0 0 2px var(--ac)}.ri .th{border-radius:12px}.ri p{margin:5px 6px 2px;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .strip{display:flex;gap:8px;overflow-x:auto;padding:0 0 120px;scrollbar-width:none}.strip .ri{flex:none;width:128px}
 #stat{position:absolute;inset:0;background:var(--bg);z-index:35;overflow-y:auto;padding:12px 16px 40px}
+.jobs .jsum{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.jobs .jsum span{font-size:12px;padding:4px 10px;border-radius:12px;background:var(--s2);color:var(--t2)}.jobs .jsum span b{color:var(--t1);font-weight:600;margin-left:3px}
+.jc{background:var(--s2);border-radius:14px;padding:10px 12px 9px;margin:6px 0;cursor:pointer;transition:background-color .2s}.jc:active{background:var(--s3)}.jc.warn{box-shadow:inset 0 0 0 1.5px #ffcf6b}
+.jr{display:flex;align-items:center;gap:8px;min-width:0}.jr i{flex:none;width:9px;height:9px;border-radius:50%}.jr b{flex:1;min-width:0;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jr span{flex:none;font-size:13px;color:var(--t2);font-variant-numeric:tabular-nums}
+.jn{margin:3px 0 0 17px;font-size:12px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jn em{font-style:normal;color:#ffcf6b}
+.jbar{height:3px;margin:7px 0 0 17px;border-radius:2px;background:#ffffff14;overflow:hidden}.jbar u{display:block;height:100%;border-radius:2px;transition:width .3s}
+.jc .jst{margin:8px 0 0 17px}.jc .jst .gb{margin:7px 0}.jmore{text-align:center;font-size:12.5px;color:var(--t2);padding:8px 0 2px;cursor:pointer}
 .card{background:var(--s1);border-radius:20px;padding:14px;margin:10px 0}.card h4{margin:0 0 8px;font-size:13px;color:var(--t2);font-weight:400}
 .bar{height:8px;border-radius:4px;background:var(--s3);overflow:hidden;margin:6px 0}.bar u{display:block;height:100%;background:var(--ok)}
 .row{display:flex;justify-content:space-between;gap:10px;padding:5px 0}.row span{color:var(--t2);text-align:right}
@@ -236,7 +242,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=31;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=32;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -497,6 +503,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  const a=d.a;if(a=='side'||a=='menux'){V.drawer=false;return render()}
  if(a=='menu'){V.drawer=true;return render()}
  if(a=='selon'){V.selm=true;V.sel=new Set();V.dragOn=true;V.pop='';return render()}
+ if(a&&a.indexOf('job:')==0){const k=a.slice(4);V.jobOpen=V.jobOpen==k?'':k;return statView()}if(a=='jobdone'){V.jobDone=!V.jobDone;return statView()}
  if(a=='stat'){V.stat=true;V.drawer=false;pipeLoad().then(()=>{if(V.stat)statView()});return render()}if(a=='statx'){V.stat=false;return render()}
   if(a=='autoOn'||a=='autoOff'){const on=a=='autoOn',s=document.createElement('div');s.innerHTML=`<div class="dim in"></div><div class="sheet in"><h3>${on?'추출기를 시작할까요?':'추출기를 멈출까요?'}</h3><p>${on?'PC에서 재시작기를 켜고 멈춘 지점부터 이어서 진행합니다. 작업 창은 최소화·낮은 우선순위로 열립니다.':'지금 작업 창을 닫고 5분 안에 멈춥니다. 하던 작업은 기록(RESUME)에 남아 다시 시작하면 이어서 합니다.'}</p><div class="bt"><b data-n>취소</b><b class="go${on?'':' red'}" data-y>${on?'시작':'정지'}</b></div></div>`;s.style.cssText='position:fixed;inset:0;z-index:9999';$('#app').appendChild(s);
    s.onclick=ev=>{if(ev.target.closest('[data-y]')){act({type:on?'auto_start':'auto_stop'},on?'추출기 시작 요청':'추출기 정지 요청');if(V.stat)statView()}if(ev.target.closest('[data-y],[data-n],.dim'))s.remove();ev.stopPropagation()};return}
@@ -538,10 +545,23 @@ function pipeHTML(pp){if(!pp||!(pp.stages||[]).length)return '';const SG=pp.stag
  const tot=SG.reduce((s,x)=>s+pc(x),0)/SG.length,left=SG.filter(x=>x.status!='완료').reduce((s,x)=>s+(+x.eta_min||0),0),cur=SG.find(x=>x.status=='진행')||SG.find(x=>x.status=='막힘')||SG.find(x=>x.status!='완료');
  const t=Date.parse(String(pp.updated||'').replace(' ','T')+':00+09:00'),age=isNaN(t)?null:Math.max(0,Math.round((Date.now()-t)/60e3)),hm=m=>m>=60?Math.floor(m/60)+'시간'+(m%60?' '+m%60+'분':''):m+'분';
  return `<div class="card pipe"><h4>🛠️ 새 파이프라인${age!=null?`<span class="lg">📡 ${ago(age)}</span>`:''}</h4><div class="pph">${ring(tot,64,7,cur?'#3e91ff':'#5fd68a',Math.round(tot)+'%')}<div><b>${cur?esc(cur.n+'단계 · '+cur.name):'전체 완료'}</b>${cur&&cur.now?`<p class="nown">${esc(cur.now)}</p>`:''}${left?`<p class="nown">⏱ 남은 시간 약 ${hm(left)}</p>`:''}</div></div>${SG.map(x=>{const c=col[x.status]||'#6b7280',on=cur&&x.n==cur.n;return `<div class="gb${on?' on':''}"><div class="gbn"><b>${esc(x.n)}. ${esc(x.name)}</b><span><em style="color:${c}">${esc(x.status)}</em> · ${Math.round(pc(x))}%${x.status!='완료'&&x.eta_min?' · '+hm(+x.eta_min):''}</span></div><div class="gbt"><u style="width:${pc(x)}%;background:${c}"></u></div>${!on&&x.status=='막힘'&&x.now?`<p class="nown bad">${esc(x.now)}</p>`:''}</div>`}).join('')}</div>`}
+// 동시 작업 카드: PC hub\jobs\*.json 전부(새 파일 = 자동으로 새 카드). 정렬 ⚠️·막힘 → 진행 → 대기 → 멈춤, 완료는 접기(24시간 지나면 숨김)
+function jobsHTML(st){const J=st.jobs||[];if(!J.length)return '';const now=Date.now()/1000,SC={'진행':'#3e91ff','대기':'#6b7280','완료':'#5fd68a','막힘':'#ff6b6b','멈춤':'#ffcf6b'};
+ const kst=x=>{const t=Date.parse(String(x||'').replace(' ','T')+':00+09:00');return isNaN(t)?0:t/1000},hm=m=>m>=60?Math.floor(m/60)+'시간'+(m%60?' '+m%60+'분':''):m+'분';
+ const L=J.map(j=>{const last=Math.max(kst(j.updated),j.mt||0),age=last?Math.max(0,Math.round((now-last)/60)):null,st2=j.status||'대기';
+  return Object.assign({},j,{st2,age,warn:st2=='막힘'||(st2=='진행'&&age!=null&&age>30),rk:st2=='막힘'?0:st2=='진행'?1:st2=='대기'?2:st2=='멈춤'?3:4})}).filter(j=>!(j.st2=='완료'&&j.age!=null&&j.age>1440));
+ L.sort((a,b)=>(b.warn-a.warn)||(a.rk-b.rk)||((+a.eta_min||1e9)-(+b.eta_min||1e9)));
+ const act=L.filter(j=>j.st2!='완료'),done=L.filter(j=>j.st2=='완료'),pp=st.pipeline||D.pipe||LS.get('pipe',null),cnt=k=>L.filter(j=>j.st2==k).length,wn=L.filter(j=>j.warn).length;
+ const card=j=>{const c=SC[j.st2]||'#6b7280',pc=j.pct==null||j.pct===''?null:Math.max(0,Math.min(100,+j.pct)),op=V.jobOpen==j.id,isP=j.id=='pipeline'&&pp&&(pp.stages||[]).length;
+  const info=[j.warn?`<em>⚠️ ${j.st2=='막힘'?'막힘':ago(j.age)+' 갱신 없음'}</em>`:'',esc(j.now||''),j.eta_min&&j.st2!='완료'?'⏱ '+hm(+j.eta_min):'',j.age!=null?'📡 '+ago(j.age):''].filter(Boolean).join(' · ');
+  let h=`<div class="jc${j.warn?' warn':''}" data-a="job:${esc(j.id)}"><div class="jr"><i style="background:${c}"></i><b>${esc(j.name||j.id)}</b><span>${pc!=null?Math.round(pc)+'%':esc(j.st2)}${isP?(op?' ▴':' ▾'):''}</span></div><div class="jn">${info}</div><div class="jbar"><u style="width:${pc!=null?pc:0}%;background:${c}"></u></div>`;
+  if(op&&isP)h+=`<div class="jst">${pp.stages.map(x=>{const xc=SC[x.status]||'#6b7280',xp=Math.max(0,Math.min(100,+x.pct||0));return `<div class="gb"><div class="gbn"><b>${esc(x.n)}. ${esc(x.name)}</b><span><em style="color:${xc};font-style:normal">${esc(x.status)}</em> · ${Math.round(xp)}%${x.eta_min&&x.status!='완료'?' · '+hm(+x.eta_min):''}</span></div><div class="gbt"><u style="width:${xp}%;background:${xc}"></u></div>${x.now?`<p class="nown" style="margin-top:4px">${esc(x.now)}</p>`:''}</div>`}).join('')}</div>`;
+  return h+'</div>'};
+ return `<div class="card jobs"><h4>🛰️ 동시 작업 ${act.length}개</h4><div class="jsum">${cnt('진행')?`<span>진행<b>${cnt('진행')}</b></span>`:''}${wn?`<span style="color:#ffcf6b">⚠️<b>${wn}</b></span>`:''}${cnt('대기')?`<span>대기<b>${cnt('대기')}</b></span>`:''}${cnt('멈춤')?`<span>멈춤<b>${cnt('멈춤')}</b></span>`:''}${done.length?`<span>완료<b>${done.length}</b></span>`:''}</div>${act.map(card).join('')}${done.length?(V.jobDone?done.map(card).join('')+`<div class="jmore" data-a="jobdone">완료 접기 ▴</div>`:`<div class="jmore" data-a="jobdone">완료 ${done.length}개 보기 ▾</div>`):''}</div>`}
 async function pipeLoad(){try{let id='';if(DRV){if(B.pipeId===undefined||(!B.pipeId&&Date.now()-(B.pipeT||0)>120e3)){B.pipeT=Date.now();const f=await B.byName('pipeline.json');B.pipeId=((f.find(x=>(x.parents||[]).includes(B.ids.root))||f[0])||{}).id||''}id=B.pipeId}else id=B.ids.pipeline||'';
  if(!id)return;const p=await B.get(id,'json');if(p&&p.stages){D.pipe=p;if(WEB)LS.set('pipe',p)}}catch(e){B.pipeId=undefined}}
 function statView(){const st=D.status;const old=$('#stat');const y0=old?old.scrollTop:0;if(old)old.remove();const el=document.createElement('div');el.id='stat';if(!old)el.className='in';let h=`<div class="selh" style="padding:0"><span class="ib" data-a="statx">✕</span><b>추출 현황</b></div>`;
- h+=pipeHTML(D.pipe||LS.get('pipe',null));
+ h+=st&&st.jobs?jobsHTML(st):pipeHTML(D.pipe||LS.get('pipe',null));
  if(!st)h+='<div class="card">현황 파일이 아직 없습니다.</div>';else{const age=Math.round((Date.now()/1000-st.time)/60),stale=age>5,a=st.auto||{},lv=st.live||{};
   const ws=(st.works||[]),act=ws.filter(w=>!w.done),W=act[0]||ws[0],tot=act.length?act.reduce((s,w)=>s+w.pct,0)/act.length:(ws.length?100:0),col=stale?'#777':(a.color||'#3e91ff');
   // 1) 전체 진행도
