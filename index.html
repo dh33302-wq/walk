@@ -40,11 +40,25 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .pts{margin-top:10px}.pt{display:flex;gap:10px;align-items:flex-start;padding:9px 0 2px;border-top:1px solid #ffffff12}.pt b{font-size:14px}.pt.on b{color:#5aa2ff}.pt p{margin:3px 0 0;font-size:12px;line-height:1.45;color:var(--t2)}.ptr{flex:none}.ptr text{font-size:13px}.pth{display:flex;justify-content:space-between;font-size:12.5px;color:var(--t2);margin:12px 0 2px}.pth:first-of-type{margin-top:4px}.pth b{color:var(--t1,#f2f2f4);font-weight:600}
 #q::-webkit-search-cancel-button,#q::-webkit-search-decoration{-webkit-appearance:none;appearance:none}#q{-webkit-appearance:none;appearance:none}
 .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:12px}.ctl small{flex-basis:100%;font-size:11.5px;color:var(--t2)}.cb{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;user-select:none}.cb.go{background:#1f6feb;color:#fff}.cb.stop{background:#3a1d1d;color:#ff8a80;border:1px solid #ff8a8055}.cb:active{transform:scale(.96)}.sheet .go.red{background:#d93025}
-.pop.rv{width:min(360px,calc(100vw - 28px));max-height:72vh}.pop .chips,.pop .cats{display:flex;flex-wrap:wrap;gap:6px;padding:2px 4px 6px;min-height:0}.pop .cats{display:grid;grid-template-columns:repeat(3,1fr)}
-.pop .ch,.pop .cat{display:inline-flex;align-items:center;gap:5px;padding:8px 11px;border-radius:12px;background:var(--s2);font-size:13px;font-weight:500;cursor:pointer;user-select:none}.pop .ch i,.pop .cat i{font-style:normal;font-size:11px;color:var(--t2)}
-.pop .cat{flex-direction:column;justify-content:center;gap:2px;padding:9px 4px;font-size:12px;text-align:center}.pop .cat em{font-style:normal;font-size:18px}.pop .cat.on{background:#1d3a66}.pop .cat.sel{box-shadow:inset 0 0 0 1.5px var(--ng)}.pop .cat.sel i{color:var(--ng)}
-.pop .ch.on{background:#4a1d1d;color:#ffb4ab}.pop .ch.q{background:#2a2430;color:#ffcf99}.pop .ch.q i{color:#ffcf99aa}
-.pop .rvb{display:flex;gap:6px;align-items:center;min-height:0;padding:4px 2px 2px}.pop .rvb input{flex:1;margin:0}.pop .send{padding:10px 14px;border-radius:14px;background:var(--ng);color:#fff;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer}.pop .send.dim{opacity:.35;pointer-events:none}
+.pop.rv{width:min(380px,calc(100vw - 28px));max-height:72vh;padding:14px 12px 0;background:#18181b;border:1px solid #ffffff14;display:flex;flex-direction:column;gap:6px}
+.pop.rv div{min-height:0;padding:0;border-radius:0;display:block}.pop.rv div:active{background:none}
+.pop.rv .rvh{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:3px;padding:0 4px 4px}.pop.rv .rvh b{font-size:15px;font-weight:600;color:var(--ng)}.pop.rv .rvh span{font-size:12px;color:var(--t2);line-height:1.4}
+.pop.rv .rvl{margin:6px 4px 0;font-size:12px;color:var(--t2)}
+.pop.rv .rcs{display:flex;flex-wrap:wrap;gap:6px}
+.pop.rv .rct{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pop.rv .rc,.pop.rv .rk{background:var(--s2);color:var(--t1);border-radius:14px;cursor:pointer;user-select:none;transition:background-color .2s,box-shadow .2s,transform .2s}
+.pop.rv .rc{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 13px;font-size:13.5px;font-weight:500}
+.pop.rv .rc i,.pop.rv .rk i{font-style:normal;font-size:11px;min-width:18px;height:18px;line-height:18px;text-align:center;border-radius:9px;background:#ffffff14;color:var(--t2)}
+.pop.rv .rk{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:58px;font-size:12.5px;font-weight:500}
+.pop.rv .rk em{font-style:normal;font-size:19px;line-height:1}.pop.rv .rk i{position:absolute;top:5px;right:5px}
+.pop.rv .rc.on,.pop.rv .rk.sel{background:#3a1f22;color:#ffb4ab;box-shadow:inset 0 0 0 1.5px var(--ng)}
+.pop.rv .rk.sel i{background:var(--ng);color:#fff}
+.pop.rv .rk.open{background:var(--s3);box-shadow:inset 0 0 0 1.5px var(--ac)}
+.pop.rv .rc:active,.pop.rv .rk:active{transform:scale(.95)}
+.pop.rv .rvb{position:sticky;bottom:0;display:flex;gap:6px;align-items:center;margin:4px -12px 0;padding:10px 12px 12px;background:#18181b;border-top:1px solid #ffffff10}
+.pop.rv .rvb input{flex:1;margin:0;height:42px}
+.pop.rv .send{display:flex;align-items:center;height:42px;padding:0 16px;border-radius:14px;background:var(--ng);color:#1a0d0d;font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer}.pop.rv .send.dim{opacity:.3;pointer-events:none}
+.tb i.okb em{color:var(--ok)}.tb i.ngb em{color:var(--ng)}.tb i.okb.done{background:#1c3526;color:var(--ok)}.tb i.ngb.done{background:#3a1f22;color:#ffb4ab}.tb i.ngb.on{background:#3a1f22;color:#ffb4ab}
 .mob{position:absolute;left:8px;bottom:8px;background:#0b6b3acc;border-radius:10px;padding:1px 8px;font-size:11px;color:#d9ffe8}
 .vd{position:absolute;right:8px;bottom:8px;background:#000a;border-radius:8px;padding:0 6px;font-size:11px}
 .sc{position:absolute;inset:0;background:#141416 no-repeat;display:none}.sc b{position:absolute;left:8px;top:8px;background:#000b;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:400}
@@ -222,7 +236,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=29;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=30;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -284,7 +298,7 @@ function moreCards(){const g=$('#grid');if(!g)return;const L=V.list,n=Math.min(L
 function toolbarHTML(targets){const p=pfInfo();if(!p)return '';const multi=V.selm,one=!multi&&targets[0];
  const btn=f=>{const [e,t]=emo(f.name);const on=one&&one.folders.includes(f.id);return `<i class="${on?'on':''}" data-pf="${f.id}"><em>${e}</em>${esc(t)}</i>`};
  const img=one&&!isV(one);
- return `<div class="tb${S.tbHide?' hide':''}"><span class="who" data-a="who">${esc(p.ch.name)} ▾<small>${S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스'}${multi?' · '+V.sel.size+'개':''}</small></span><span class="vs"></span>${p.mot.map(btn).join('')}${p.cand?btn(p.cand):''}<span class="vs"></span><i class="mu" data-a="rv"><em>✓</em>검수</i>${img?`<i class="mu" data-a="ext"><em>🎯</em>추출</i>`:''}</div><div class="tbh" data-a="tbshow"></div>`}
+ return `<div class="tb${S.tbHide?' hide':''}"><span class="who" data-a="who">${esc(p.ch.name)} ▾<small>${S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스'}${multi?' · '+V.sel.size+'개':''}</small></span><span class="vs"></span>${p.mot.map(btn).join('')}${p.cand?btn(p.cand):''}<span class="vs"></span>${(()=>{const c=one&&D.verify[one.id];return `<i class="mu okb${c&&c[0]=='맞음'?' done':''}" data-a="ok"><em>✓</em>맞음</i><i class="mu ngb${V.pop=='rv'?' on':c&&c[0]=='틀림'?' done':''}" data-a="rv"><em>✕</em>틀림</i>`})()}${img?`<i class="mu" data-a="ext"><em>🎯</em>추출</i>`:''}</div><div class="tbh" data-a="tbshow"></div>`}
 // ---------- 검수 창: 맞음 · 자주 쓴 이유(자동 학습) · 분류 6개 → 세부 여러 개 골라 보내기 ----------
 const RVC=[['무기', '🗡️', ['다른 무기(모양이 다름)', '손에 안 붙음·안 따라옴', '쥐는 위치·각도 틀림', '날 방향 반대', '무기 전환 틀림(꺼내기·넣기)', '넣어둔 무기 위치 틀림', '무기 안 보임(게임엔 있음)', '맨손인데 무기 있음', '무기 크기 다름']],
  ['외형', '👤', ['회색(텍스처 안 입혀짐)', '텍스처가 다름', '옷이 다름', '머리·얼굴이 다름', '메시 깨짐·구멍', '부위가 빠짐', '색이 다름', '키·체형이 다름']],
@@ -294,12 +308,14 @@ const RVC=[['무기', '🗡️', ['다른 무기(모양이 다름)', '손에 안
  ['태그', '🏷️', ['이름 틀림', '게임·캐릭터 틀림', '동작 분류 틀림', '무기 태그 틀림', '폴더 틀림']]];
 function rvLearn(){return (D.status&&D.status.vreasons)||{top:[],cat:{}}}
 function rvHTML(targets){const cur=targets.length==1&&D.verify[targets[0].id],L=rvLearn(),sel=V.rvSel||(V.rvSel=new Set()),oc=V.rvCat||'';
- const cnt=c=>[...sel].filter(x=>x.split('|')[0]==c).length;
- let h=`<div class="pop rv"><h6>검수${targets.length>1?' '+targets.length+'개':''}${cur&&cur[0]=='틀림'&&cur[1]?' · 지난번: '+esc(cur[1]).slice(0,40):''}${(()=>{const vd=targets.length==1&&D.status&&(D.status.vdone||{})[targets[0].id];return vd?` · 🔧 ${esc(vd.r)}${vd.a?' — '+esc(vd.a):''}`:(cur&&cur[0]=='틀림'?' · ⏳ 처리 대기':'')})()}</h6><div class="ok${cur&&cur[0]=='맞음'?' on':''}" data-v="맞음">✓ 맞음 — 게임과 같음</div>`;
- if((L.top||[]).length)h+=`<h6>자주 쓴 이유 · 누르면 바로 보냄</h6><div class="chips">${L.top.map(t=>`<b class="ch q" data-rq="${esc(t.c)}|${esc(t.s)}">${esc(t.s)}<i>${t.n}</i></b>`).join('')}</div>`;
- h+=`<h6>틀림 — 분류 고르고 세부를 여러 개 고를 수 있어요</h6><div class="cats">${RVC.map(([c,ic])=>`<b class="cat${oc==c?' on':''}${cnt(c)?' sel':''}" data-rc="${c}"><em>${ic}</em>${c}${cnt(c)?`<i>${cnt(c)}</i>`:''}</b>`).join('')}</div>`;
+ const cnt=c=>[...sel].filter(x=>x.split('|')[0]==c).length,vd=targets.length==1&&D.status&&(D.status.vdone||{})[targets[0].id];
+ const sub=[targets.length>1?targets.length+'개':'',cur&&cur[0]=='틀림'&&cur[1]?'지난번: '+esc(cur[1]).slice(0,40):'',vd?'🔧 '+esc(vd.r)+(vd.a?' — '+esc(vd.a):''):(cur&&cur[0]=='틀림'?'⏳ 처리 대기':'')].filter(Boolean).join(' · ');
+ const chip=(k,lab,extra,on)=>`<b class="rc${on?' on':''}" ${k}>${lab}${extra||''}</b>`;
+ let h=`<div class="pop rv"><div class="rvh"><b>✕ 틀린 곳</b>${sub?`<span>${sub}</span>`:''}</div>`;
+ if((L.top||[]).length)h+=`<p class="rvl">자주 쓴 이유 · 누르면 바로 보냄</p><div class="rcs">${L.top.map(t=>chip(`data-rq="${esc(t.c)}|${esc(t.s)}"`,esc(t.s),`<i>${t.n}</i>`)).join('')}</div>`;
+ h+=`<p class="rvl">분류</p><div class="rct">${RVC.map(([c,ic])=>`<b class="rk${oc==c?' open':''}${cnt(c)?' sel':''}" data-rc="${c}"><em>${ic}</em><span>${c}</span>${cnt(c)?`<i>${cnt(c)}</i>`:''}</b>`).join('')}</div>`;
  if(oc){const base=(RVC.find(x=>x[0]==oc)||[])[2]||[],extra=((L.cat||{})[oc]||[]).filter(x=>!base.includes(x));
-  h+=`<div class="chips">${[...base,...extra].map(x=>`<b class="ch${sel.has(oc+'|'+x)?' on':''}" data-rs="${esc(oc)}|${esc(x)}">${esc(x)}${extra.includes(x)?' ✦':''}</b>`).join('')}</div>`}
+  h+=`<p class="rvl">${esc(oc)} · 여러 개 고를 수 있어요</p><div class="rcs">${[...base,...extra].map(x=>chip(`data-rs="${esc(oc)}|${esc(x)}"`,esc(x)+(extra.includes(x)?' ✦':''),'',sel.has(oc+'|'+x))).join('')}</div>`}
  return h+`<div class="rvb"><input id="rvx" type="search" autocomplete="off" enterkeyhint="send" placeholder="기타 직접 입력" value="${esc(V.rvText||'')}"><b class="send${sel.size||V.rvText?'':' dim'}" data-rsend>보내기${sel.size?' '+sel.size:''}</b></div></div>`}
 function rvReason(){const g={};(V.rvSel||new Set()).forEach(k=>{const [c,x]=k.split('|');(g[c]=g[c]||[]).push(x)});const p=Object.entries(g).map(([c,xs])=>c+': '+xs.join(', '));const t=(V.rvText||'').trim();if(t)p.push('기타: '+t);return p.join(' / ')}
 function rvSend(targets,reason){if(!reason||!targets.length)return;V.pop='';V.rvSel=new Set();V.rvCat='';V.rvText='';act({type:'verify',items:targets.map(t=>t.id),result:'틀림',reason},'검수: 틀림 · '+reason.slice(0,60)+(targets.length>1?' · '+targets.length+'개':''));autoNext()}
@@ -484,6 +500,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  if(a=='stat'){V.stat=true;V.drawer=false;return render()}if(a=='statx'){V.stat=false;return render()}
   if(a=='autoOn'||a=='autoOff'){const on=a=='autoOn',s=document.createElement('div');s.innerHTML=`<div class="dim in"></div><div class="sheet in"><h3>${on?'추출기를 시작할까요?':'추출기를 멈출까요?'}</h3><p>${on?'PC에서 재시작기를 켜고 멈춘 지점부터 이어서 진행합니다. 작업 창은 최소화·낮은 우선순위로 열립니다.':'지금 작업 창을 닫고 5분 안에 멈춥니다. 하던 작업은 기록(RESUME)에 남아 다시 시작하면 이어서 합니다.'}</p><div class="bt"><b data-n>취소</b><b class="go${on?'':' red'}" data-y>${on?'시작':'정지'}</b></div></div>`;s.style.cssText='position:fixed;inset:0;z-index:9999';$('#app').appendChild(s);
    s.onclick=ev=>{if(ev.target.closest('[data-y]')){act({type:on?'auto_start':'auto_stop'},on?'추출기 시작 요청':'추출기 정지 요청');if(V.stat)statView()}if(ev.target.closest('[data-y],[data-n],.dim'))s.remove();ev.stopPropagation()};return}
+ if(a=='ok'){V.pop='';act({type:'verify',items:targets.map(t=>t.id),result:'맞음',reason:''},'검수: 맞음'+(targets.length>1?' · '+targets.length+'개':''));autoNext();return}
  if(a=='sort'||a=='rv'||a=='who'){V.pop=V.pop==a?'':a;render();rvBind(targets);return}
  if(a=='selx'){V.selm=false;V.sel.clear();return render()}if(a=='selall'){V.list.forEach(it=>V.sel.add(it.id));return render()}if(a=='selinv'){const n=new Set();V.list.forEach(it=>{if(!V.sel.has(it.id))n.add(it.id)});V.sel=n;return render()}
  if(a=='close'){return closeDetail()}
