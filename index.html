@@ -222,7 +222,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=28;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=29;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -286,7 +286,7 @@ function toolbarHTML(targets){const p=pfInfo();if(!p)return '';const multi=V.sel
  const img=one&&!isV(one);
  return `<div class="tb${S.tbHide?' hide':''}"><span class="who" data-a="who">${esc(p.ch.name)} ▾<small>${S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스'}${multi?' · '+V.sel.size+'개':''}</small></span><span class="vs"></span>${p.mot.map(btn).join('')}${p.cand?btn(p.cand):''}<span class="vs"></span><i class="mu" data-a="rv"><em>✓</em>검수</i>${img?`<i class="mu" data-a="ext"><em>🎯</em>추출</i>`:''}</div><div class="tbh" data-a="tbshow"></div>`}
 // ---------- 검수 창: 맞음 · 자주 쓴 이유(자동 학습) · 분류 6개 → 세부 여러 개 골라 보내기 ----------
-const RVC=[['무기', '🗡️', ['다른 무기(모양이 다름)', '손에 안 붙음·안 따라옴', '쥐는 위치·각도 틀림', '날 방향 반대', '칼집↔손 전환 틀림', '칼집·등 위치 틀림', '무기 안 보임(게임엔 있음)', '맨손인데 무기 있음', '무기 크기 다름']],
+const RVC=[['무기', '🗡️', ['다른 무기(모양이 다름)', '손에 안 붙음·안 따라옴', '쥐는 위치·각도 틀림', '날 방향 반대', '무기 전환 틀림(꺼내기·넣기)', '넣어둔 무기 위치 틀림', '무기 안 보임(게임엔 있음)', '맨손인데 무기 있음', '무기 크기 다름']],
  ['외형', '👤', ['회색(텍스처 안 입혀짐)', '텍스처가 다름', '옷이 다름', '머리·얼굴이 다름', '메시 깨짐·구멍', '부위가 빠짐', '색이 다름', '키·체형이 다름']],
  ['구도·카메라', '🎥', ['화면 밖으로 나감', '카메라 흔들림', '이동을 못 따라감', '캐릭터가 너무 작음', '너무 커서 잘림', '보는 각도 틀림', '배경·조명 이상']],
  ['속도·프레임', '⏱️', ['게임보다 느림', '게임보다 빠름', '뚝뚝 끊김', '동작이 중간에 잘림', '시작·끝 지점 틀림', '반복 이음새 튐']],
