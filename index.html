@@ -40,6 +40,11 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .pts{margin-top:10px}.pt{display:flex;gap:10px;align-items:flex-start;padding:9px 0 2px;border-top:1px solid #ffffff12}.pt b{font-size:14px}.pt.on b{color:#5aa2ff}.pt p{margin:3px 0 0;font-size:12px;line-height:1.45;color:var(--t2)}.ptr{flex:none}.ptr text{font-size:13px}.pth{display:flex;justify-content:space-between;font-size:12.5px;color:var(--t2);margin:12px 0 2px}.pth:first-of-type{margin-top:4px}.pth b{color:var(--t1,#f2f2f4);font-weight:600}
 #q::-webkit-search-cancel-button,#q::-webkit-search-decoration{-webkit-appearance:none;appearance:none}#q{-webkit-appearance:none;appearance:none}
 .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:12px}.ctl small{flex-basis:100%;font-size:11.5px;color:var(--t2)}.cb{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;user-select:none}.cb.go{background:#1f6feb;color:#fff}.cb.stop{background:#3a1d1d;color:#ff8a80;border:1px solid #ff8a8055}.cb:active{transform:scale(.96)}.sheet .go.red{background:#d93025}
+.pop.rv{width:min(360px,calc(100vw - 28px));max-height:72vh}.pop .chips,.pop .cats{display:flex;flex-wrap:wrap;gap:6px;padding:2px 4px 6px;min-height:0}.pop .cats{display:grid;grid-template-columns:repeat(3,1fr)}
+.pop .ch,.pop .cat{display:inline-flex;align-items:center;gap:5px;padding:8px 11px;border-radius:12px;background:var(--s2);font-size:13px;font-weight:500;cursor:pointer;user-select:none}.pop .ch i,.pop .cat i{font-style:normal;font-size:11px;color:var(--t2)}
+.pop .cat{flex-direction:column;justify-content:center;gap:2px;padding:9px 4px;font-size:12px;text-align:center}.pop .cat em{font-style:normal;font-size:18px}.pop .cat.on{background:#1d3a66}.pop .cat.sel{box-shadow:inset 0 0 0 1.5px var(--ng)}.pop .cat.sel i{color:var(--ng)}
+.pop .ch.on{background:#4a1d1d;color:#ffb4ab}.pop .ch.q{background:#2a2430;color:#ffcf99}.pop .ch.q i{color:#ffcf99aa}
+.pop .rvb{display:flex;gap:6px;align-items:center;min-height:0;padding:4px 2px 2px}.pop .rvb input{flex:1;margin:0}.pop .send{padding:10px 14px;border-radius:14px;background:var(--ng);color:#fff;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer}.pop .send.dim{opacity:.35;pointer-events:none}
 .mob{position:absolute;left:8px;bottom:8px;background:#0b6b3acc;border-radius:10px;padding:1px 8px;font-size:11px;color:#d9ffe8}
 .vd{position:absolute;right:8px;bottom:8px;background:#000a;border-radius:8px;padding:0 6px;font-size:11px}
 .sc{position:absolute;inset:0;background:#141416 no-repeat;display:none}.sc b{position:absolute;left:8px;top:8px;background:#000b;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:400}
@@ -217,7 +222,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=24;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=25;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -280,7 +285,23 @@ function toolbarHTML(targets){const p=pfInfo();if(!p)return '';const multi=V.sel
  const btn=f=>{const [e,t]=emo(f.name);const on=one&&one.folders.includes(f.id);return `<i class="${on?'on':''}" data-pf="${f.id}"><em>${e}</em>${esc(t)}</i>`};
  const img=one&&!isV(one);
  return `<div class="tb${S.tbHide?' hide':''}"><span class="who" data-a="who">${esc(p.ch.name)} ▾<small>${S.pfs=='work'?'🛠️ 작업':'📚 레퍼런스'}${multi?' · '+V.sel.size+'개':''}</small></span><span class="vs"></span>${p.mot.map(btn).join('')}${p.cand?btn(p.cand):''}<span class="vs"></span><i class="mu" data-a="rv"><em>✓</em>검수</i>${img?`<i class="mu" data-a="ext"><em>🎯</em>추출</i>`:''}</div><div class="tbh" data-a="tbshow"></div>`}
-function popHTML(targets){const p=pfInfo();if(V.pop=='rv'){const cur=targets.length==1&&D.verify[targets[0].id];return `<div class="pop"><h6>검수 ${targets.length>1?targets.length+'개':''}</h6><div class="ok${cur&&cur[0]=='맞음'?' on':''}" data-v="맞음">✓ 맞음 — 게임과 같음</div>${['무기','외형','모션','태그'].map(x=>`<div class="ng${cur&&cur[1]==x?' on':''}" data-v="틀림" data-r="${x}">✕ ${x}</div>`).join('')}<input id="rvx" placeholder="기타 — 직접 입력 후 Enter"></div>`}
+// ---------- 검수 창: 맞음 · 자주 쓴 이유(자동 학습) · 분류 6개 → 세부 여러 개 골라 보내기 ----------
+const RVC=[['무기','🗡️',['무기 없음','다른 무기','손 위치·각도','날 방향 반대','칼집·등 위치','무기 링크 확인']],['외형','👤',['회색·텍스처','의상·머리 다름','메시 깨짐·누락','색 다름']],
+ ['구도·카메라','🎥',['화면 밖으로 나감','카메라 흔들림','너무 작음','각도 틀림']],['속도·프레임','⏱️',['너무 느림','너무 빠름','프레임 끊김','길이 잘림']],
+ ['모션·포즈','🦴',['다른 동작','발 미끄러짐','관절 꺾임','A·T 포즈']],['태그','🏷️',['이름 틀림','분류 틀림','무기 태그 틀림']]];
+function rvLearn(){return (D.status&&D.status.vreasons)||{top:[],cat:{}}}
+function rvHTML(targets){const cur=targets.length==1&&D.verify[targets[0].id],L=rvLearn(),sel=V.rvSel||(V.rvSel=new Set()),oc=V.rvCat||'';
+ const cnt=c=>[...sel].filter(x=>x.split('|')[0]==c).length;
+ let h=`<div class="pop rv"><h6>검수${targets.length>1?' '+targets.length+'개':''}${cur&&cur[0]=='틀림'&&cur[1]?' · 지난번: '+esc(cur[1]).slice(0,40):''}${(()=>{const vd=targets.length==1&&D.status&&(D.status.vdone||{})[targets[0].id];return vd?` · 🔧 ${esc(vd.r)}${vd.a?' — '+esc(vd.a):''}`:(cur&&cur[0]=='틀림'?' · ⏳ 처리 대기':'')})()}</h6><div class="ok${cur&&cur[0]=='맞음'?' on':''}" data-v="맞음">✓ 맞음 — 게임과 같음</div>`;
+ if((L.top||[]).length)h+=`<h6>자주 쓴 이유 · 누르면 바로 보냄</h6><div class="chips">${L.top.map(t=>`<b class="ch q" data-rq="${esc(t.c)}|${esc(t.s)}">${esc(t.s)}<i>${t.n}</i></b>`).join('')}</div>`;
+ h+=`<h6>틀림 — 분류 고르고 세부를 여러 개 고를 수 있어요</h6><div class="cats">${RVC.map(([c,ic])=>`<b class="cat${oc==c?' on':''}${cnt(c)?' sel':''}" data-rc="${c}"><em>${ic}</em>${c}${cnt(c)?`<i>${cnt(c)}</i>`:''}</b>`).join('')}</div>`;
+ if(oc){const base=(RVC.find(x=>x[0]==oc)||[])[2]||[],extra=((L.cat||{})[oc]||[]).filter(x=>!base.includes(x));
+  h+=`<div class="chips">${[...base,...extra].map(x=>`<b class="ch${sel.has(oc+'|'+x)?' on':''}" data-rs="${esc(oc)}|${esc(x)}">${esc(x)}${extra.includes(x)?' ✦':''}</b>`).join('')}</div>`}
+ return h+`<div class="rvb"><input id="rvx" type="search" autocomplete="off" enterkeyhint="send" placeholder="기타 직접 입력" value="${esc(V.rvText||'')}"><b class="send${sel.size||V.rvText?'':' dim'}" data-rsend>보내기${sel.size?' '+sel.size:''}</b></div></div>`}
+function rvReason(){const g={};(V.rvSel||new Set()).forEach(k=>{const [c,x]=k.split('|');(g[c]=g[c]||[]).push(x)});const p=Object.entries(g).map(([c,xs])=>c+': '+xs.join(', '));const t=(V.rvText||'').trim();if(t)p.push('기타: '+t);return p.join(' / ')}
+function rvSend(targets,reason){if(!reason||!targets.length)return;V.pop='';V.rvSel=new Set();V.rvCat='';V.rvText='';act({type:'verify',items:targets.map(t=>t.id),result:'틀림',reason},'검수: 틀림 · '+reason.slice(0,60)+(targets.length>1?' · '+targets.length+'개':''));autoNext()}
+function rvBind(targets){const x=$('#rvx');if(!x)return;x.oninput=()=>{V.rvText=x.value;const b=$('.rv .send');if(b)b.classList.toggle('dim',!(V.rvSel&&V.rvSel.size)&&!x.value.trim())};x.onkeydown=ev=>{if(ev.key=='Enter'){ev.preventDefault();rvSend(targets,rvReason())}}}
+function popHTML(targets){const p=pfInfo();if(V.pop=='rv')return rvHTML(targets);
  if(V.pop=='who'&&p)return `<div class="pop l"><h6>넣을 곳</h6><div class="${S.pfs=='ref'?'on':''}" data-pfs="ref">📚 레퍼런스</div><div class="${S.pfs=='work'?'on':''}" data-pfs="work">🛠️ 작업</div><h6>캐릭터</h6>${p.chars.map(c=>`<div class="${c.id==p.ch.id?'on':''}" data-pfc="${c.id}">${esc(c.name)}<span style="margin-left:auto;color:var(--t2)">${c.n||''}</span></div>`).join('')}</div>`;
  if(V.pop=='sort')return `<div class="pop" style="bottom:auto;top:56px"><h6>정렬</h6>${[['name','이름'],['added','추가한 날'],['dur','길이'],['game','게임']].map(([k,l])=>`<div class="${S.sort==k?'on':''}" data-sort="${k}">${l}${S.sort==k?(S.dir>0?' ↑':' ↓'):''}</div>`).join('')}<h6>한 줄에</h6><div>${[1,2,3,4].map(n=>`<span class="tg${cols()==n?' on':''}" data-cols="${n}">${n}</span>`).join(' ')}</div></div>`;
  return ''}
@@ -433,7 +454,7 @@ function backOnce(){if($('.sheet')){document.querySelectorAll('.sheet,.dim:not(.
  if(V.view=='detail'){closeDetail();return true}if(V.selm){V.selm=false;V.sel.clear();V._kept=V.shown;render();return true}return false}
 if(!GAS){try{history.replaceState({eg:0},'');history.pushState({eg:1},'')}catch(e){}addEventListener('popstate',()=>{if(backOnce()){try{history.pushState({eg:1},'')}catch(e){}}else history.back()})}
 // ---------- 누름 처리 ----------
-document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-f],[data-tw],[data-at],[data-rt],[data-rn],[data-mode],[data-pf],[data-v],[data-pfs],[data-pfc],[data-sort],[data-cols],[data-go],[data-sv],[data-svx]');
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-f],[data-tw],[data-at],[data-rt],[data-rn],[data-mode],[data-pf],[data-v],[data-pfs],[data-pfc],[data-sort],[data-cols],[data-go],[data-sv],[data-svx],[data-rc],[data-rs],[data-rq],[data-rsend]');
  if(!el){if(V.pop&&!e.target.closest('.pop')){V.pop='';V._kept=V.shown;render()}return}const d=el.dataset,targets=V.selm?[...V.sel].map(id=>D.by[id]):V.view=='detail'?[V.list[V.cur]]:[];V._kept=V.shown;
  if(d.tw){S.open[d.tw]=!S.open[d.tw];save();e.stopPropagation();return render()}
  if(d.svx!=null){S.saved.splice(+d.svx,1);save();return render()}
@@ -449,14 +470,18 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  if(d.pf){if(!targets.length)return;const f=D.fby[d.pf],nm=path(f.id).slice(1).join(' › ');
   if(V.selm){act({type:'pf_add',folder:f.id,items:targets.map(t=>t.id)},targets.length+'개 → '+nm);V.selm=false;V.sel.clear();return render()}
   const has=targets[0].folders.includes(f.id);act({type:has?'pf_remove':'pf_add',folder:f.id,items:[targets[0].id]},(has?'뺐습니다: ':'넣었습니다: ')+nm);if(!has)autoNext();return}
- if(d.v){V.pop='';act({type:'verify',items:targets.map(t=>t.id),result:d.v,reason:d.r||''},'검수: '+(d.r?'틀림('+d.r+')':'맞음')+(targets.length>1?' · '+targets.length+'개':''));autoNext();return}
+ if(d.rc!=null){V.rvCat=V.rvCat==d.rc?'':d.rc;render();rvBind(targets);return}
+ if(d.rs!=null){const k=d.rs;V.rvSel=V.rvSel||new Set();V.rvSel.has(k)?V.rvSel.delete(k):V.rvSel.add(k);render();rvBind(targets);return}
+ if(d.rq!=null){const [c,x]=d.rq.split('|');return rvSend(targets,c+': '+x)}
+ if(d.rsend!=null){return rvSend(targets,rvReason())}
+ if(d.v){V.rvSel=new Set();V.rvCat='';V.rvText='';V.pop='';act({type:'verify',items:targets.map(t=>t.id),result:d.v,reason:d.r||''},'검수: '+(d.r?'틀림('+d.r+')':'맞음')+(targets.length>1?' · '+targets.length+'개':''));autoNext();return}
  const a=d.a;if(a=='side'||a=='menux'){V.drawer=false;return render()}
  if(a=='menu'){V.drawer=true;return render()}
  if(a=='selon'){V.selm=true;V.sel=new Set();V.dragOn=true;V.pop='';return render()}
  if(a=='stat'){V.stat=true;V.drawer=false;return render()}if(a=='statx'){V.stat=false;return render()}
   if(a=='autoOn'||a=='autoOff'){const on=a=='autoOn',s=document.createElement('div');s.innerHTML=`<div class="dim in"></div><div class="sheet in"><h3>${on?'추출기를 시작할까요?':'추출기를 멈출까요?'}</h3><p>${on?'PC에서 재시작기를 켜고 멈춘 지점부터 이어서 진행합니다. 작업 창은 최소화·낮은 우선순위로 열립니다.':'지금 작업 창을 닫고 5분 안에 멈춥니다. 하던 작업은 기록(RESUME)에 남아 다시 시작하면 이어서 합니다.'}</p><div class="bt"><b data-n>취소</b><b class="go${on?'':' red'}" data-y>${on?'시작':'정지'}</b></div></div>`;s.style.cssText='position:fixed;inset:0;z-index:9999';$('#app').appendChild(s);
    s.onclick=ev=>{if(ev.target.closest('[data-y]')){act({type:on?'auto_start':'auto_stop'},on?'추출기 시작 요청':'추출기 정지 요청');if(V.stat)statView()}if(ev.target.closest('[data-y],[data-n],.dim'))s.remove();ev.stopPropagation()};return}
- if(a=='sort'||a=='rv'||a=='who'){V.pop=V.pop==a?'':a;render();const x=$('#rvx');if(x)x.onkeydown=ev=>{if(ev.key=='Enter'&&x.value.trim()){V.pop='';act({type:'verify',items:targets.map(t=>t.id),result:'틀림',reason:x.value.trim()},'검수: 틀림('+x.value.trim()+')');autoNext()}};return}
+ if(a=='sort'||a=='rv'||a=='who'){V.pop=V.pop==a?'':a;render();rvBind(targets);return}
  if(a=='selx'){V.selm=false;V.sel.clear();return render()}if(a=='selall'){V.list.forEach(it=>V.sel.add(it.id));return render()}if(a=='selinv'){const n=new Set();V.list.forEach(it=>{if(!V.sel.has(it.id))n.add(it.id)});V.sel=n;return render()}
  if(a=='close'){return closeDetail()}
  if(a=='conn'){B.connect();return}
