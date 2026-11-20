@@ -128,7 +128,7 @@ input{user-select:text;-webkit-user-select:text;font:inherit;color:var(--t1)}
 .sp small{margin-top:6px;font-size:11px;color:var(--t2);text-align:center;line-height:1.2;max-width:76px}.sp.g small{color:var(--t1)}
 .lg{float:right;font-size:11px;color:var(--t2)}.lg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 8px}
 .gb{margin:10px 0}.gbn{display:flex;justify-content:space-between;gap:8px;font-size:13px}.gbn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}.gbn span{color:var(--t2);font-variant-numeric:tabular-nums;white-space:nowrap}
-.gbt{position:relative;height:10px;margin-top:5px;border-radius:5px;background:#ffffff0a;overflow:hidden}.gbt u{position:absolute;left:0;top:0;bottom:0;border-radius:5px}.gbt{background:#ffffff1c}.gbt .cl{background:#3e91ff}.gbt .cl.ok{background:#5fd68a}.gbt .cl.np{background:#6b7280}
+.gbt{position:relative;height:10px;margin-top:5px;border-radius:5px;background:#ffffff0a;overflow:hidden}.gbt u{position:absolute;left:0;top:0;bottom:0;border-radius:5px}.gbt{background:#ffffff1c}.gbt .cl{background:#3e91ff}.gbt .cl.ok{background:#5fd68a}.pph{display:flex;gap:12px;align-items:center;margin:2px 0 6px}.pph b{font-size:15px;font-weight:600}.pph .nown{margin:4px 0 0}.pipe .gb.on .gbn b{color:#cfe2ff;font-weight:600}.gbn em{font-style:normal}.pipe .gbt u{transition:width .3s}.gbt .cl.np{background:#6b7280}
 .bd{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.bt{background:var(--s2);border-radius:16px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;border-top:3px solid var(--c)}
 .btr{position:relative;width:46px;height:46px}.btr em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;font-weight:700}
 .bt b{font-size:12px;font-weight:600;line-height:1.2;max-height:2.4em;overflow:hidden}.bt span{font-size:11px;color:var(--t2)}
@@ -207,7 +207,7 @@ const B={ids:{},tok:'',tokT:0,names:{},
   const r=await this.fx('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+bd},body:m});
   if(!r.ok)throw new Error('드라이브 저장 실패 '+r.status)}};
 // ---------- 상태 ----------
-const D={items:[],by:{},tags:[],folders:[],fby:{},status:null,time:0};
+const D={items:[],by:{},tags:[],folders:[],fby:{},status:null,time:0,pipe:null};
 const S=Object.assign({folder:'all',tags:[],not:[],mode:'and',text:'',sort:'added',dir:-1,cols:0,pfc:'',pfs:'ref',open:{},side:true,recent:[],saved:[]},LS.get('state',{}));
 if(!LS.get('sortv2',0)){S.sort='added';S.dir=-1;LS.set('sortv2',1);LS.set('state',S)}
 let V={view:'grid',list:[],cur:-1,sel:new Set(),selm:false,pop:'',shown:0,drawer:false,ab:null,rate:1,flip:false};
@@ -236,7 +236,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=30;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=31;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
@@ -497,7 +497,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  const a=d.a;if(a=='side'||a=='menux'){V.drawer=false;return render()}
  if(a=='menu'){V.drawer=true;return render()}
  if(a=='selon'){V.selm=true;V.sel=new Set();V.dragOn=true;V.pop='';return render()}
- if(a=='stat'){V.stat=true;V.drawer=false;return render()}if(a=='statx'){V.stat=false;return render()}
+ if(a=='stat'){V.stat=true;V.drawer=false;pipeLoad().then(()=>{if(V.stat)statView()});return render()}if(a=='statx'){V.stat=false;return render()}
   if(a=='autoOn'||a=='autoOff'){const on=a=='autoOn',s=document.createElement('div');s.innerHTML=`<div class="dim in"></div><div class="sheet in"><h3>${on?'추출기를 시작할까요?':'추출기를 멈출까요?'}</h3><p>${on?'PC에서 재시작기를 켜고 멈춘 지점부터 이어서 진행합니다. 작업 창은 최소화·낮은 우선순위로 열립니다.':'지금 작업 창을 닫고 5분 안에 멈춥니다. 하던 작업은 기록(RESUME)에 남아 다시 시작하면 이어서 합니다.'}</p><div class="bt"><b data-n>취소</b><b class="go${on?'':' red'}" data-y>${on?'시작':'정지'}</b></div></div>`;s.style.cssText='position:fixed;inset:0;z-index:9999';$('#app').appendChild(s);
    s.onclick=ev=>{if(ev.target.closest('[data-y]')){act({type:on?'auto_start':'auto_stop'},on?'추출기 시작 요청':'추출기 정지 요청');if(V.stat)statView()}if(ev.target.closest('[data-y],[data-n],.dim'))s.remove();ev.stopPropagation()};return}
  if(a=='ok'){V.pop='';act({type:'verify',items:targets.map(t=>t.id),result:'맞음',reason:''},'검수: 맞음'+(targets.length>1?' · '+targets.length+'개':''));autoNext();return}
@@ -533,7 +533,15 @@ function ctlHTML(st,a,stale){const run=a.state=='on'||a.state=='late',pend=PEND.
  let h='<div class="ctl">';if(pend)h+=`<span class="cp on">⏳ ${pend.type=='auto_start'?'시작':'정지'} 요청 ${pend.sent?'보냄 · PC 반영 대기':'보내는 중'}</span>`;
  else if(a.state=='done')h+='<span class="cp">전체 작업 완료</span>';else if(run)h+='<b class="cb stop" data-a="autoOff">■ 추출기 정지</b>';else h+=`<b class="cb go" data-a="autoOn">▶ 추출기 시작</b>`;
  if(stale&&!pend)h+='<small>PC가 꺼져 있으면 켜질 때 반영</small>';if(c&&!pend&&Date.now()/1000-c.t<86400)h+=`<small>최근: ${esc(c.msg)} · ${ago(Math.round((Date.now()/1000-c.t)/60))}</small>`;return h+'</div>'}
+// 새 파이프라인 진행도: PC의 hub\pipeline\progress.json 을 드라이브 _eagle_mobile\pipeline.json 으로 받아 단계별 막대·%·지금 하는 일·남은 시간
+function pipeHTML(pp){if(!pp||!(pp.stages||[]).length)return '';const SG=pp.stages,col={'완료':'#5fd68a','진행':'#3e91ff','막힘':'#ff6b6b','대기':'#6b7280'},pc=x=>Math.max(0,Math.min(100,+x.pct||0));
+ const tot=SG.reduce((s,x)=>s+pc(x),0)/SG.length,left=SG.filter(x=>x.status!='완료').reduce((s,x)=>s+(+x.eta_min||0),0),cur=SG.find(x=>x.status=='진행')||SG.find(x=>x.status=='막힘')||SG.find(x=>x.status!='완료');
+ const t=Date.parse(String(pp.updated||'').replace(' ','T')+':00+09:00'),age=isNaN(t)?null:Math.max(0,Math.round((Date.now()-t)/60e3)),hm=m=>m>=60?Math.floor(m/60)+'시간'+(m%60?' '+m%60+'분':''):m+'분';
+ return `<div class="card pipe"><h4>🛠️ 새 파이프라인${age!=null?`<span class="lg">📡 ${ago(age)}</span>`:''}</h4><div class="pph">${ring(tot,64,7,cur?'#3e91ff':'#5fd68a',Math.round(tot)+'%')}<div><b>${cur?esc(cur.n+'단계 · '+cur.name):'전체 완료'}</b>${cur&&cur.now?`<p class="nown">${esc(cur.now)}</p>`:''}${left?`<p class="nown">⏱ 남은 시간 약 ${hm(left)}</p>`:''}</div></div>${SG.map(x=>{const c=col[x.status]||'#6b7280',on=cur&&x.n==cur.n;return `<div class="gb${on?' on':''}"><div class="gbn"><b>${esc(x.n)}. ${esc(x.name)}</b><span><em style="color:${c}">${esc(x.status)}</em> · ${Math.round(pc(x))}%${x.status!='완료'&&x.eta_min?' · '+hm(+x.eta_min):''}</span></div><div class="gbt"><u style="width:${pc(x)}%;background:${c}"></u></div>${!on&&x.status=='막힘'&&x.now?`<p class="nown bad">${esc(x.now)}</p>`:''}</div>`}).join('')}</div>`}
+async function pipeLoad(){try{let id='';if(DRV){if(B.pipeId===undefined||(!B.pipeId&&Date.now()-(B.pipeT||0)>120e3)){B.pipeT=Date.now();const f=await B.byName('pipeline.json');B.pipeId=((f.find(x=>(x.parents||[]).includes(B.ids.root))||f[0])||{}).id||''}id=B.pipeId}else id=B.ids.pipeline||'';
+ if(!id)return;const p=await B.get(id,'json');if(p&&p.stages){D.pipe=p;if(WEB)LS.set('pipe',p)}}catch(e){B.pipeId=undefined}}
 function statView(){const st=D.status;const old=$('#stat');const y0=old?old.scrollTop:0;if(old)old.remove();const el=document.createElement('div');el.id='stat';if(!old)el.className='in';let h=`<div class="selh" style="padding:0"><span class="ib" data-a="statx">✕</span><b>추출 현황</b></div>`;
+ h+=pipeHTML(D.pipe||LS.get('pipe',null));
  if(!st)h+='<div class="card">현황 파일이 아직 없습니다.</div>';else{const age=Math.round((Date.now()/1000-st.time)/60),stale=age>5,a=st.auto||{},lv=st.live||{};
   const ws=(st.works||[]),act=ws.filter(w=>!w.done),W=act[0]||ws[0],tot=act.length?act.reduce((s,w)=>s+w.pct,0)/act.length:(ws.length?100:0),col=stale?'#777':(a.color||'#3e91ff');
   // 1) 전체 진행도
@@ -561,7 +569,7 @@ function statView(){const st=D.status;const old=$('#stat');const y0=old?old.scro
 // 현황: 드라이브 PC 앱이 올린 status.json 과 중계로 바로 올라온 status_live.json 중 새것
 async function liveStatus(st){try{if(!DRV)return st;if(B.liveId===undefined||(!B.liveId&&Date.now()-(B.liveT||0)>120e3)){B.liveT=Date.now();const f=await B.byName('status_live.json');B.liveId=((f.find(x=>(x.parents||[]).includes(B.ids.root))||f[0])||{}).id||''}
  if(B.liveId){const l=await B.get(B.liveId,'json');if(l&&l.time>(st.time||0))return l}}catch(e){B.liveId=undefined}return st}
-async function refresh(first){try{const st=await liveStatus(await B.get(B.ids.status,'json'));const newer=!D.status||st.time!=D.status.time;D.status=st;D.live=true;if(WEB)LS.set('status',st);
+async function refresh(first){try{const pl=pipeLoad();const st=await liveStatus(await B.get(B.ids.status,'json'));await pl;const newer=!D.status||st.time!=D.status.time;D.status=st;D.live=true;if(WEB)LS.set('status',st);
   const quiet=V.view=='grid'&&!V.selm&&!V.pop&&document.activeElement!==$('#q');
   if(first||(newer&&st.scan_time&&st.scan_time*1>D.time-600&&quiet)){const ix=await B.get(B.ids.index,'json');if(!D.cfg||ix.time!=D.time){if(WEB)CS.put('index',ix);
     if(!D.cfg||quiet){ingest(ix);V._kept=V.shown;render()}else D.next=ix}}
