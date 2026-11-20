@@ -148,7 +148,7 @@ const B={ids:{},tok:'',tokT:0,names:{},
  connect(){const url=gasUrl();this._pw=window.open(url+(url.includes('?')?'&':'?')+'bridge=1&pop=1','_blank')},
  async token(){if(GAS&&Date.now()-this.tokT>40*60e3){this.tok=await this.run('token');this.tokT=Date.now()}if(WEB&&(!this.tok||Date.now()-this.tokT>45*60e3))await this.bridge();return this.tok},
  async fx(u,o){o=o||{};const go=async()=>fetch(u,Object.assign({},o,{headers:Object.assign({},o.headers||{},{Authorization:'Bearer '+await this.token()})}));
-  let r=await go();if(r.status==401&&WEB){this.tok='';await this.bridge();r=await go()}return r},
+  let r=await go();if((r.status==401||r.status==403)&&WEB){this.tok='';try{localStorage.removeItem('walk_tk')}catch(e){}await this.bridge();r=await go()}return r},
  async get(id,type){const r=DRV?await this.fx('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media'):await fetch('/file/'+encodeURIComponent(id),{cache:'no-store'});if(!r.ok)throw new Error('드라이브 응답 '+r.status);return type=='json'?r.json():r.blob()},
  async list(folder,q){let out=[],pt='';do{const u=DRV?'https://www.googleapis.com/drive/v3/files?pageSize=1000&fields=nextPageToken,files(id,name,modifiedTime)&q='+encodeURIComponent("'"+folder+"' in parents and trashed=false"+(q?' and '+q:''))+(pt?'&pageToken='+pt:''):'/list/'+encodeURIComponent(folder)+'?q='+encodeURIComponent(q||'');
   const r=DRV?await this.fx(u):await fetch(u);if(!r.ok)throw new Error('드라이브 목록 '+r.status);const j=await r.json();out=out.concat(j.files||[]);pt=j.nextPageToken||''}while(pt);return out},
@@ -217,7 +217,7 @@ function applyLocal(a,sign){const add=(a.type=='pf_add')==(sign>0);
  if(a.type=='verify')a.items.forEach(id=>{if(sign>0)D.verify[id]=[a.result,a.reason];else delete D.verify[id]});
  if(a.type=='memo'&&D.by[a.item]){const it=D.by[a.item],l=a.frame+'f '+a.text;if(sign>0)it.ann=(it.ann?it.ann+'\n':'')+l;else it.ann=it.ann.split('\n').filter(x=>x!=l).join('\n')}}
 // 새 버전 자동 적용: 켤 때·앱으로 돌아올 때·5분마다 확인 → 목록 화면에서 손 뗀 뒤 바로 새로 열림
-const BUILD=23;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
+const BUILD=24;document.addEventListener('touchstart',()=>V._lt=Date.now(),{passive:true,capture:true});
 function updReady(){return V._upd&&V.view=='grid'&&!V.selm&&!V.stat&&!V.drawer&&!V.pop&&!$('.sheet')&&document.activeElement.id!='q'&&Date.now()-(V._lt||0)>1200}
 async function checkUpd(){if(V._upd||!('caches' in window))return;try{await fetch('./?chk='+Date.now(),{cache:'no-store'}).catch(()=>{});await new Promise(r=>setTimeout(r,2500));
  const r=await (await caches.open('eg-shell-v2')).match('./');if(!r)return;const m=(await r.text()).match(/const BUILD=(\d+)/);if(m&&+m[1]>BUILD){V._upd=1;const t=setInterval(()=>{if(updReady()){clearInterval(t);location.reload()}},700)}}catch(e){}}
